@@ -47,7 +47,7 @@ function App() {
         <div className="card">
           <h1>SVG Path Visualizer 📐</h1>
           <p>
-            Enter a SVG path data (the string inside the <code>d</code>{" "}
+            Enter an SVG path data (the string inside the <code>d</code>{" "}
             attribute) to visualize it and discover all its different commands
           </p>
           <input
