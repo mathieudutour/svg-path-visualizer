@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SVG Path Visualizer",
+  "name": "SVG Path Visualizer",
   "icons": [
     {
       "src": "favicon.ico",
