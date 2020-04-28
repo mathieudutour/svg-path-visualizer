@@ -45,7 +45,12 @@ function App() {
     <div className="App">
       <div className="left">
         <div className="card">
-          <h1>SVG Path Visualizer 📐</h1>
+          <h1>
+            SVG Path Visualizer{" "}
+            <span role="img" aria-hidden>
+              📐
+            </span>
+          </h1>
           <p>
             Enter an SVG path data (the string inside the <code>d</code>{" "}
             attribute) to visualize it and discover all its different commands
@@ -55,7 +60,7 @@ function App() {
             onChange={updateString}
             placeholder="Enter a SVG path..."
           />
-          {error ? <div>{error.message}</div> : null}
+          {error ? <div className="error-message">{error.message}</div> : null}
         </div>
         <div className="card">
           <h2>Explanations</h2>

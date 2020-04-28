@@ -17,9 +17,8 @@
 }
 
 .right .svg-viewer {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+  width: 100%;
+  height: 100%;
 }
 
 .left input {
@@ -52,4 +51,9 @@ code {
 
 .left li + li {
   padding-top: 10px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
