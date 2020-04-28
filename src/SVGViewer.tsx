@@ -26,6 +26,27 @@ function SVGViewer({
       pathData.bounds.maxY - pathData.bounds.minY
     ) / 100;
 
+  const onMouseMove = React.useCallback(
+    (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+      const svg = event.currentTarget;
+      const svgPos = svg.getBoundingClientRect();
+      const rpos = svg.createSVGRect();
+      rpos.x = event.clientX - svgPos.x;
+      rpos.y = event.clientY - svgPos.y;
+      rpos.width = rpos.height = 1;
+
+      // @ts-ignore
+      const list = svg.getIntersectionList(rpos, null);
+
+      const hover =
+        Array.from(list)
+          .filter((x) => !!x.dataset.key)
+          .map((x) => x.dataset.key)[0] || null;
+      setHovering(hover);
+    },
+    [setHovering]
+  );
+
   const style = React.useCallback(
     (key: string, type?: HelperType) => {
       return {
@@ -48,13 +69,10 @@ function SVGViewer({
             ? stroke * 2
             : "none",
         strokeWidth: stroke,
-        onMouseEnter:
-          type === HelperType.invisible ? () => {} : () => setHovering(key),
-        onMouseLeave:
-          type === HelperType.invisible ? () => {} : () => setHovering(null),
+        "data-key": type === HelperType.invisible ? undefined : key,
       };
     },
-    [stroke, hovering, setHovering]
+    [stroke, hovering]
   );
 
   function pointHelpers(
@@ -514,6 +532,7 @@ function SVGViewer({
       viewBox={`${pathData.bounds.minX - 20} ${pathData.bounds.minY - 20} ${
         pathData.bounds.maxX + 20
       } ${pathData.bounds.maxY + 20}`}
+      onMouseMove={onMouseMove}
     >
       {data.elems}
       {data.overlay}
