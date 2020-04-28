@@ -4,6 +4,8 @@ import { SVGCommand } from "svg-pathdata/lib/types";
 import { keyFor, assertNever, HelperType } from "./utils";
 import { useWindowSize } from "./hooks/useWindowSize";
 
+let resetTimeout: NodeJS.Timeout;
+
 function SVGViewer({
   pathData,
   hovering,
@@ -29,27 +31,6 @@ function SVGViewer({
       pathData.bounds.maxY - pathData.bounds.minY
     ) / 100;
 
-  const onMouseMove = React.useCallback(
-    (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-      const svg = event.currentTarget;
-      const svgPos = svg.getBoundingClientRect();
-      const rpos = svg.createSVGRect();
-      rpos.x = event.clientX - svgPos.x;
-      rpos.y = event.clientY - svgPos.y;
-      rpos.width = rpos.height = 1;
-
-      // @ts-ignore
-      const list = svg.getIntersectionList(rpos, null);
-
-      const hover =
-        Array.from(list)
-          .filter((x) => !!x.dataset.key)
-          .map((x) => x.dataset.key)[0] || null;
-      setHovering(hover);
-    },
-    [setHovering]
-  );
-
   const style = React.useCallback(
     (key: string, type?: HelperType) => {
       return {
@@ -64,6 +45,9 @@ function SVGViewer({
               : type === HelperType.invisible
               ? "transparent"
               : "black",
+          pointerEvents: (type === HelperType.invisible
+            ? "none"
+            : "initial") as "none" | "initial",
         },
         stroke: "currentColor",
         fill: "none",
@@ -73,9 +57,24 @@ function SVGViewer({
             : "none",
         strokeWidth: stroke,
         "data-key": type === HelperType.invisible ? undefined : key,
+        onMouseEnter: () => {
+          if (type === HelperType.invisible) {
+            return;
+          }
+          if (resetTimeout) {
+            clearTimeout(resetTimeout);
+          }
+          setHovering(key);
+        },
+        onMouseLeave: () => {
+          if (type === HelperType.invisible) {
+            return;
+          }
+          resetTimeout = setTimeout(() => setHovering(null), 50);
+        },
       };
     },
-    [stroke, hovering]
+    [stroke, hovering, setHovering]
   );
 
   function pointHelpers(
@@ -560,11 +559,7 @@ function SVGViewer({
   }
 
   return (
-    <svg
-      className="svg-viewer"
-      viewBox={bounds.join(" ")}
-      onMouseMove={onMouseMove}
-    >
+    <svg className="svg-viewer" viewBox={bounds.join(" ")}>
       {data.elems}
       {data.overlay}
     </svg>
