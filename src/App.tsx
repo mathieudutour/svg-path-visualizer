@@ -3,6 +3,7 @@ import { SVGPathData } from "svg-pathdata";
 import SVGViewer from "./SVGViewer";
 import CommandExplainer from "./CommandExplainer";
 import GitHubCorner from "./GitHubCorner";
+import Examples from "./Examples";
 
 import "./App.css";
 
@@ -61,6 +62,8 @@ function App() {
             placeholder="Enter a SVG path..."
           />
           {error ? <div className="error-message">{error.message}</div> : null}
+          <p>Or explore some examples</p>
+          <Examples setPathString={setPathString} pathString={pathString} />
         </div>
         <div className="card">
           <h2>Explanations</h2>
