@@ -59,9 +59,36 @@ function CommandExplainer({
           {" "}
           y:{" "}
           {"relative" in c && c.relative
-            ? `previous point ${point.x < 0 ? "-" : "+"} `
-            : `${point.x < 0 ? "-" : ""}`}
+            ? `previous point ${point.y < 0 ? "-" : "+"} `
+            : `${point.y < 0 ? "-" : ""}`}
           {Math.abs(point.y)}{" "}
+        </span>
+        {"}"}
+      </>
+    );
+  }
+
+  function printRelativePoint(
+    point: { x?: number; y?: number },
+    c: SVGCommand,
+    suffix: number | string
+  ) {
+    return (
+      <>
+        <span {...style(keyFor(c, `${suffix}-x`))}>
+          {!point.x
+            ? ""
+            : point.x < 0
+            ? `left ${Math.abs(point.x)}`
+            : `right ${Math.abs(point.x)}`}
+        </span>
+        {point.x && point.y ? " and " : ""}
+        <span {...style(keyFor(c, `${suffix}-y`))}>
+          {!point.y
+            ? ""
+            : point.y < 0
+            ? `top ${Math.abs(point.y)}`
+            : `bottom ${Math.abs(point.y)}`}
         </span>
         {"}"}
       </>
@@ -70,14 +97,14 @@ function CommandExplainer({
 
   return (
     <ul>
-      {pathData.commands.map((c, i) => {
+      {pathData.commands.map((c, i, a) => {
         let child: React.ReactNode;
         switch (c.type) {
           case SVGPathData.MOVE_TO:
             child = (
               <div>
                 <code>
-                  <span {...style(keyFor(c, i))}>
+                  <span {...style(keyFor(c, `${i}-command`))}>
                     {c.relative ? "m" : "M"}{" "}
                   </span>
                   <span {...style(keyFor(c, `${i}-x`))}>{c.x}</span>
@@ -85,8 +112,21 @@ function CommandExplainer({
                   <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
                 </code>
                 <p>
-                  Move the current point{i === 0 ? " (0, 0)" : ""} to a new
-                  point {printPoint(c, c, i)}
+                  {!a[i - 1] || a[i - 1].type !== SVGPathData.MOVE_TO
+                    ? "Pick up the pen and "
+                    : ""}
+                  {c.relative ? (
+                    <span>
+                      , from the current position,{" "}
+                      <span {...style(keyFor(c, `${i}-command`))}>move</span> it{" "}
+                      {printRelativePoint(c, c, i)}
+                    </span>
+                  ) : (
+                    <span>
+                      <span {...style(keyFor(c, `${i}-command`))}>Move</span> it
+                      to {printPoint(c, c, i)}
+                    </span>
+                  )}
                 </p>
               </div>
             );
@@ -97,7 +137,12 @@ function CommandExplainer({
                 <code>
                   <span {...style(keyFor(c, i))}>Z</span>
                 </code>
-                <p>Close the path</p>
+                <p>
+                  {a[i - 1] && a[i - 1].type === SVGPathData.MOVE_TO
+                    ? "Put down the pen and "
+                    : ""}
+                  Draw a line straight back to the start
+                </p>
               </div>
             );
             break;
@@ -105,7 +150,7 @@ function CommandExplainer({
             child = (
               <div>
                 <code>
-                  <span {...style(keyFor(c, i))}>
+                  <span {...style(keyFor(c, `${i}-command`))}>
                     {c.relative ? "l" : "L"}{" "}
                   </span>
                   <span {...style(keyFor(c, `${i}-x`))}>{c.x}</span>
@@ -113,8 +158,23 @@ function CommandExplainer({
                   <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
                 </code>
                 <p>
-                  Draw a line from the current point to a new point{" "}
-                  {printPoint(c, c, i)}
+                  {a[i - 1] && a[i - 1].type === SVGPathData.MOVE_TO
+                    ? "Put down the pen and "
+                    : ""}
+                  {c.relative ? (
+                    <span>
+                      , from the current position, move{" "}
+                      {printRelativePoint(c, c, i)}
+                    </span>
+                  ) : (
+                    <span>
+                      {" "}
+                      Draw a{" "}
+                      <span {...style(keyFor(c, `${i}-command`))}>
+                        line
+                      </span> to {printPoint(c, c, i)}
+                    </span>
+                  )}
                 </p>
               </div>
             );
@@ -123,15 +183,30 @@ function CommandExplainer({
             child = (
               <div>
                 <code>
-                  <span {...style(keyFor(c, i))}>
+                  <span {...style(keyFor(c, `${i}-command`))}>
                     {c.relative ? "h" : "H"}{" "}
                   </span>
                   <span {...style(keyFor(c, `${i}-x`))}>{c.x}</span>
                 </code>
                 <p>
-                  Draw a horizontal line from the current point{" "}
-                  {c.relative ? "of length" : "to"}{" "}
-                  <span {...style(keyFor(c, `${i}-x`))}>{c.x}</span>
+                  {a[i - 1] && a[i - 1].type === SVGPathData.MOVE_TO
+                    ? "Put down the pen and "
+                    : ""}
+                  {c.relative ? (
+                    <span>
+                      , from the current position, move{" "}
+                      {printRelativePoint(c, c, i)}
+                    </span>
+                  ) : (
+                    <span>
+                      {" "}
+                      Move{" "}
+                      <span {...style(keyFor(c, `${i}-command`))}>
+                        horizontally
+                      </span>{" "}
+                      to <span {...style(keyFor(c, `${i}-x`))}>{c.x}</span>
+                    </span>
+                  )}
                 </p>
               </div>
             );
@@ -140,15 +215,30 @@ function CommandExplainer({
             child = (
               <div>
                 <code>
-                  <span {...style(keyFor(c, i))}>
+                  <span {...style(keyFor(c, `${i}-command`))}>
                     {c.relative ? "v" : "V"}{" "}
                   </span>
                   <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
                 </code>
                 <p>
-                  Draw a vertical line from the current point{" "}
-                  {c.relative ? "of length" : "to"}{" "}
-                  <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
+                  {a[i - 1] && a[i - 1].type === SVGPathData.MOVE_TO
+                    ? "Put down the pen and "
+                    : ""}
+                  {c.relative ? (
+                    <span>
+                      , from the current position, move{" "}
+                      {printRelativePoint(c, c, i)}
+                    </span>
+                  ) : (
+                    <span>
+                      {" "}
+                      Move{" "}
+                      <span {...style(keyFor(c, `${i}-command`))}>
+                        vertically
+                      </span>{" "}
+                      to <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
+                    </span>
+                  )}
                 </p>
               </div>
             );
@@ -157,7 +247,7 @@ function CommandExplainer({
             child = (
               <div>
                 <code>
-                  <span {...style(keyFor(c, i))}>
+                  <span {...style(keyFor(c, `${i}-command`))}>
                     {c.relative ? "c" : "C"}{" "}
                   </span>
                   <span {...style(keyFor(c, `${i}-cp1-x`))}>{c.x1}</span>
@@ -173,8 +263,9 @@ function CommandExplainer({
                   <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
                 </code>
                 <p>
-                  Draw a Bézier curve from the current point to a new point{" "}
-                  {printPoint(c, c, i)}
+                  Draw a Bézier{" "}
+                  <span {...style(keyFor(c, `${i}-command`))}>curve</span> from
+                  the current point to a new point {printPoint(c, c, i)}
                 </p>
                 <p>
                   The{" "}
@@ -194,8 +285,8 @@ function CommandExplainer({
             child = (
               <div>
                 <code>
-                  <span {...style(keyFor(c, i))}>
-                    {c.relative ? "c" : "C"}{" "}
+                  <span {...style(keyFor(c, `${i}-command`))}>
+                    {c.relative ? "s" : "S"}{" "}
                   </span>
                   <span {...style(keyFor(c, `${i}-cp2-x`))}>{c.x2}</span>
                   <span {...style(keyFor(c, `${i}-cp2`))}>,</span>
@@ -206,7 +297,9 @@ function CommandExplainer({
                   <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
                 </code>
                 <p>
-                  Draw a Bézier curve from the current point to a new point{" "}
+                  Draw a{" "}
+                  <span {...style(keyFor(c, `${i}-command`))}>smooth</span>{" "}
+                  Bézier curve from the current point to a new point{" "}
                   {printPoint(c, c, i)}
                 </p>
                 <p>
@@ -232,7 +325,7 @@ function CommandExplainer({
             child = (
               <div>
                 <code>
-                  <span {...style(keyFor(c, i))}>
+                  <span {...style(keyFor(c, `${i}-command`))}>
                     {c.relative ? "q" : "Q"}{" "}
                   </span>
                   <span {...style(keyFor(c, `${i}-cp-x`))}>{c.x1}</span>
@@ -244,8 +337,10 @@ function CommandExplainer({
                   <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
                 </code>
                 <p>
-                  Draw a quadratic Bézier curve from the current point to a new
-                  point {printPoint(c, c, i)}
+                  Draw a{" "}
+                  <span {...style(keyFor(c, `${i}-command`))}>quadratic</span>{" "}
+                  Bézier curve from the current point to a new point{" "}
+                  {printPoint(c, c, i)}
                 </p>
                 <p>
                   The{" "}
@@ -259,7 +354,7 @@ function CommandExplainer({
             child = (
               <div>
                 <code>
-                  <span {...style(keyFor(c, i))}>
+                  <span {...style(keyFor(c, `${i}-command`))}>
                     {c.relative ? "t" : "T"}{" "}
                   </span>
                   <span {...style(keyFor(c, `${i}-x`))}>{c.x}</span>
@@ -285,7 +380,7 @@ function CommandExplainer({
             child = (
               <div>
                 <code>
-                  <span {...style(keyFor(c, i))}>
+                  <span {...style(keyFor(c, `${i}-command`))}>
                     {c.relative ? "a" : "A"}{" "}
                   </span>
                   <span {...style(keyFor(c, i))}>
@@ -296,7 +391,8 @@ function CommandExplainer({
                   <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
                 </code>
                 <p>
-                  Draw an Arc curve from the current point to a new point{" "}
+                  Draw an <span {...style(keyFor(c, `${i}-command`))}>Arc</span>{" "}
+                  curve from the current point to a new point{" "}
                   {printPoint(c, c, i)}
                 </p>
               </div>
