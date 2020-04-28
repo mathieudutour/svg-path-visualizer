@@ -2,6 +2,7 @@ import React from "react";
 import { SVGPathData, encodeSVGPath } from "svg-pathdata";
 import { SVGCommand } from "svg-pathdata/lib/types";
 import { keyFor, assertNever, HelperType } from "./utils";
+import { useWindowSize } from "./hooks/useWindowSize";
 
 function SVGViewer({
   pathData,
@@ -20,6 +21,8 @@ function SVGViewer({
   hovering: string | null;
   setHovering: (newHover: string | null) => void;
 }) {
+  const windowSize = useWindowSize();
+
   const stroke =
     Math.min(
       pathData.bounds.maxX - pathData.bounds.minX,
@@ -526,12 +529,40 @@ function SVGViewer({
     }
   );
 
+  const margin = stroke * 10;
+
+  const bounds = [
+    pathData.bounds.minX - margin,
+    pathData.bounds.minY - margin,
+    pathData.bounds.maxX + margin,
+    pathData.bounds.maxY + margin,
+  ];
+
+  const width = bounds[2] - bounds[0];
+  const height = bounds[3] - bounds[1];
+
+  if (windowSize.width && windowSize.height) {
+    const containerSize = {
+      width: windowSize.width / 2,
+      height: windowSize.height,
+    };
+    if (width / height > containerSize.width / containerSize.height) {
+      const left =
+        (width / height - containerSize.width / containerSize.height) * height;
+      bounds[1] -= left / 2;
+      bounds[3] += left / 2;
+    } else {
+      const left =
+        (containerSize.width / containerSize.height - width / height) * width;
+      bounds[0] -= left / 2;
+      bounds[2] += left / 2;
+    }
+  }
+
   return (
     <svg
       className="svg-viewer"
-      viewBox={`${pathData.bounds.minX - 20} ${pathData.bounds.minY - 20} ${
-        pathData.bounds.maxX + 20
-      } ${pathData.bounds.maxY + 20}`}
+      viewBox={bounds.join(" ")}
       onMouseMove={onMouseMove}
     >
       {data.elems}
