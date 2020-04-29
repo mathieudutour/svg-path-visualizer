@@ -3,6 +3,7 @@ import { SVGPathData, encodeSVGPath } from "svg-pathdata";
 import { SVGCommand } from "svg-pathdata/lib/types";
 import { keyFor, assertNever, HelperType } from "./utils";
 import { useWindowSize } from "./hooks/useWindowSize";
+import { red, blue } from "./colors";
 
 let resetTimeout: NodeJS.Timeout;
 
@@ -37,9 +38,9 @@ function SVGViewer({
         style: {
           color:
             hovering === key
-              ? "red"
+              ? red
               : hovering?.startsWith(key)
-              ? "blue"
+              ? blue
               : type === HelperType.default || type === HelperType.implicit
               ? "lightgrey"
               : type === HelperType.invisible
@@ -99,6 +100,10 @@ function SVGViewer({
         {...style(keyFor(c, `${suffix}-y`), HelperType.invisible)}
       />,
     ];
+  }
+
+  if (!pathData.commands.length) {
+    return null;
   }
 
   const data = pathData.commands.reduce(
@@ -549,12 +554,12 @@ function SVGViewer({
       const left =
         (width / height - containerSize.width / containerSize.height) * height;
       bounds[1] -= left / 2;
-      bounds[3] += left / 2;
+      bounds[3] += left;
     } else {
       const left =
         (containerSize.width / containerSize.height - width / height) * width;
       bounds[0] -= left / 2;
-      bounds[2] += left / 2;
+      bounds[2] += left;
     }
   }
 

@@ -2,11 +2,13 @@ import React from "react";
 import { SVGPathData } from "svg-pathdata";
 import { SVGCommand } from "svg-pathdata/lib/types";
 import { keyFor, assertNever, HelperType } from "./utils";
+import { red, blue } from "./colors";
 
 function CommandExplainer({
   pathData,
   hovering,
   setHovering,
+  showBezierCurveExplanation,
 }: {
   pathData: {
     commands: SVGCommand[];
@@ -19,6 +21,7 @@ function CommandExplainer({
   };
   hovering: string | null;
   setHovering: (newHover: string | null) => void;
+  showBezierCurveExplanation: (ev: any) => void;
 }) {
   const style = React.useCallback(
     (key: string, type?: HelperType) => {
@@ -26,9 +29,9 @@ function CommandExplainer({
         style: {
           color:
             hovering === key || (hovering && key.startsWith(hovering))
-              ? "red"
+              ? red
               : hovering?.startsWith(key)
-              ? "blue"
+              ? blue
               : "black",
         },
         onMouseEnter: () => setHovering(key),
@@ -255,9 +258,15 @@ function CommandExplainer({
                 </code>
                 <p>
                   {penCommand}
-                  Draw a Bézier{" "}
-                  <span {...style(keyFor(c, `${i}-command`))}>curve</span> from
-                  the current point to a new point {printPoint(c, c, i)}
+                  Draw a{" "}
+                  <span
+                    className="help-link"
+                    onClick={showBezierCurveExplanation}
+                  >
+                    Bézier{" "}
+                    <span {...style(keyFor(c, `${i}-command`))}>curve</span>
+                  </span>{" "}
+                  from the current point to a new point {printPoint(c, c, i)}
                 </p>
                 <p>
                   The{" "}
@@ -291,9 +300,14 @@ function CommandExplainer({
                 <p>
                   {penCommand}
                   Draw a{" "}
-                  <span {...style(keyFor(c, `${i}-command`))}>smooth</span>{" "}
-                  Bézier curve from the current point to a new point{" "}
-                  {printPoint(c, c, i)}
+                  <span
+                    className="help-link"
+                    onClick={showBezierCurveExplanation}
+                  >
+                    <span {...style(keyFor(c, `${i}-command`))}>smooth</span>{" "}
+                    Bézier curve
+                  </span>{" "}
+                  from the current point to a new point {printPoint(c, c, i)}
                 </p>
                 <p>
                   The{" "}
@@ -332,11 +346,14 @@ function CommandExplainer({
                 <p>
                   {penCommand}
                   Draw a{" "}
-                  <span {...style(keyFor(c, `${i}-command`))}>
-                    quadratic
+                  <span
+                    className="help-link"
+                    onClick={showBezierCurveExplanation}
+                  >
+                    <span {...style(keyFor(c, `${i}-command`))}>quadratic</span>{" "}
+                    Bézier curve
                   </span>{" "}
-                  Bézier curve from the current point to a new point{" "}
-                  {printPoint(c, c, i)}
+                  from the current point to a new point {printPoint(c, c, i)}
                 </p>
                 <p>
                   The{" "}
@@ -359,8 +376,14 @@ function CommandExplainer({
                 </code>
                 <p>
                   {penCommand}
-                  Draw a quadratic Bézier curve from the current point to a new
-                  point {printPoint(c, c, i)}
+                  Draw a{" "}
+                  <span
+                    className="help-link"
+                    onClick={showBezierCurveExplanation}
+                  >
+                    quadratic Bézier curve
+                  </span>{" "}
+                  from the current point to a new point {printPoint(c, c, i)}
                 </p>
                 <p>
                   The{" "}

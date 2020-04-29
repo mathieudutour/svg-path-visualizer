@@ -1,27 +1,38 @@
-.App {
-  display: flex;
-  flex-direction: row;
+.body {
+  height: 100vh;
+  overflow-y: scroll;
 }
 
-.left {
-  width: 50%;
+.cards {
+  position: relative;
+  width: 50vw;
+  min-width: 450px;
   padding: 20px;
 }
 
-.right {
+.viewer-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  min-width: 400px;
+  height: 100vh;
+}
+
+.viewer-wrapper .sticky {
   position: sticky;
   top: 0;
-  width: 50%;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   justify-content: center;
 }
 
-.right .svg-viewer {
+.viewer-wrapper .svg-viewer {
   width: 100%;
   height: 100%;
 }
 
-.left input {
+.cards input {
   display: block;
   width: 100%;
   height: 20px;
@@ -29,7 +40,9 @@
 }
 
 .card {
+  position: relative;
   margin: 0 10px 20px;
+  background: white;
   padding: 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -41,19 +54,69 @@ code {
   padding: 3px 5px;
 }
 
-.left ul {
+.cards ul {
   padding-left: 25px;
 }
 
-.left li {
+.cards li {
   padding: 0;
 }
 
-.left li + li {
+.cards li + li {
   padding-top: 10px;
 }
 
 .error-message {
   color: red;
   margin-top: 10px;
+}
+
+.help-link {
+  text-decoration: underline dotted black;
+  text-underline-position: under;
+  cursor: help;
+}
+
+.explanations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 0;
+}
+
+.explanations .animation-wrapper {
+  padding: 30px 10px 20px 30px;
+}
+
+@media all and (max-width: 450px) {
+  .cards,
+  .viewer-wrapper {
+    width: 100vw;
+    min-width: 0;
+  }
+}
+
+.cancel-button {
+  position: absolute;
+  padding: 10px;
+  right: 0;
+  top: 0;
+  background: transparent;
+  border: 0;
+  font-size: 16px;
+  color: #0074d9;
+  cursor: pointer;
+}
+
+.done-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 30px;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  font-size: 16px;
+  color: #0074d9;
+  cursor: pointer;
 }

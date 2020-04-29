@@ -1,0 +1,9 @@
+export const red = "#FF4136";
+export const blue = "#0074D9";
+export const teal = "#39CCCC";
+export const green = "#2ECC40";
+export const yellow = "#FFDC00";
+export const purple = "#B10DC9";
+export const orange = "#FF851B";
+export const pink = "#F012BE";
+export const olive = "#3D9970";
