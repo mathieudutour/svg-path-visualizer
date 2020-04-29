@@ -22,7 +22,9 @@ export function BezierCurveExplanation() {
         tool" as in Photoshop, Illustrator, or Figma - or "Vector tool" as in
         Sketch) and let you define those 4 points.
       </p>
-      <video src={sketchScreencast} autoPlay loop />
+      <video controls autoPlay loop>
+        <source src={sketchScreencast}></source>
+      </video>
       <p>
         The curve goes from the "Start" point to the "End" point while the
         "Control" point define its curvature.
