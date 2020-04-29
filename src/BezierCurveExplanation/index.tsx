@@ -49,6 +49,11 @@ export function BezierCurveExplanation() {
         which means turning the least possible while respect the instructions of
         the control towers.
       </p>
+      <p>
+        <em>
+          Maybe a spaceship metaphor would be better? Also need some drawings
+        </em>
+      </p>
       <h2>How does it translate to SVG?</h2>
       <p>
         The command associated with a Bézier Curve is <code>C</code>. The start
