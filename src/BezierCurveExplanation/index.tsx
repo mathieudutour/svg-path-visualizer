@@ -22,7 +22,7 @@ export function BezierCurveExplanation() {
         tool" as in Photoshop, Illustrator, or Figma - or "Vector tool" as in
         Sketch) and let you define those 4 points.
       </p>
-      <video controls autoPlay loop>
+      <video controls autoPlay loop muted>
         <source src={sketchScreencast}></source>
       </video>
       <p>
