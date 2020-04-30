@@ -1,6 +1,11 @@
 import React from "react";
 import StringArt from "./StringArt";
-import { CubicBezierCurveIllustration } from "./BezierCurveIllustrations";
+import {
+  CubicBezierCurveIllustration,
+  SmoothCubicBezierCurveIllustration,
+  QuadraticBezierCurveIllustration,
+  SmoothQuadraticBezierCurveIllustration,
+} from "./BezierCurveIllustrations";
 
 // @ts-ignore
 import sketchScreencastMp4 from "./bezier-curve-sketch.mp4";
@@ -60,6 +65,7 @@ export function BezierCurveExplanation() {
         </em>
       </p>
       <h2>How does it translate to SVG?</h2>
+      <h3>The Curve command</h3>
       <p>
         The command associated with a Bézier Curve is <code>C</code>. The start
         point is always a given (the position at the end of the previous command
@@ -68,9 +74,47 @@ export function BezierCurveExplanation() {
       <CubicBezierCurveIllustration
         style={{ width: "50%", margin: "auto", display: "block" }}
       />
-      There are also some special cases of Bézier Curves which have shortcut
-      notation in SVG.
-      <p>TBC</p>
+      <h3>The Smooth Curve command</h3>
+      <p>
+        There are also some special cases of Bézier Curves which have shortcut
+        notation in SVG.
+      </p>
+      <p>
+        A common case is when you have multiple curves one after the other and
+        you want it to snoothly transition between them. To do so, you need to
+        have the first control point of the next curve be the reflection of the
+        second control point of the previous curve. So as long as you specify
+        one, you shouldn't need to specify the other one. That's what the{" "}
+        <code>S</code> command is for (S for smooth).
+      </p>
+      <SmoothCubicBezierCurveIllustration
+        style={{ width: "100%", margin: "auto", display: "block" }}
+      />
+      <p>
+        If you look back at the Sketch screencast, you will notice that we
+        actually define the reflection of the second control point, implictly
+        preparing for the next curve segment.
+      </p>
+      <h3>The Quadratic Curve command</h3>
+      <p>
+        Another case is when both control point are superimposed. In that case,
+        you also don't need to specify them both, only one is enough. That what
+        the <code>Q</code> command is for (Q for quadratic).
+      </p>
+      <QuadraticBezierCurveIllustration
+        style={{ width: "50%", margin: "auto", display: "block" }}
+      />
+      <p>That's our curve stitching drawing!</p>
+      <h3>The Smooth Quadratic Curve command</h3>
+      <p>
+        Now what if we want to continue our quadratic Bézier Curve with another
+        quadratic Bézier Curve? Well we only have to specify the end point! That
+        what the <code>T</code> command is for (T for Smooth Quadratic
+        obviously).
+      </p>
+      <SmoothQuadraticBezierCurveIllustration
+        style={{ width: "100%", margin: "auto", display: "block" }}
+      />
     </div>
   );
 }
