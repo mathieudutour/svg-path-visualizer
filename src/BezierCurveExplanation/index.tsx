@@ -3,7 +3,9 @@ import StringArt from "./StringArt";
 import { CubicBezierCurveIllustration } from "./BezierCurveIllustrations";
 
 // @ts-ignore
-import sketchScreencast from "./bezier-curve-sketch.mov";
+import sketchScreencastMp4 from "./bezier-curve-sketch.mp4";
+// @ts-ignore
+import sketchScreencastWebm from "./bezier-curve-sketch.webm";
 
 import "./index.css";
 
@@ -23,7 +25,8 @@ export function BezierCurveExplanation() {
         Sketch) and let you define those 4 points.
       </p>
       <video controls autoPlay loop muted>
-        <source src={sketchScreencast}></source>
+        <source src={sketchScreencastWebm} type="video/webm"></source>
+        <source src={sketchScreencastMp4} type="video/mp4"></source>
       </video>
       <p>
         The curve goes from the "Start" point to the "End" point while the
