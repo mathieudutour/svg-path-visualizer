@@ -84,20 +84,23 @@ function SVGViewer({
     c: SVGCommand,
     suffix: number | string
   ) {
+    const keys = [keyFor(c, `${suffix}-x`), keyFor(c, `${suffix}-y`)];
     return [
       <line
+        key={keys[0]}
         x1={"relative" in c && c.relative ? from.x : 0}
         y1={to.y}
         x2={to.x}
         y2={to.y}
-        {...style(keyFor(c, `${suffix}-x`), HelperType.invisible)}
+        {...style(keys[0], HelperType.invisible)}
       />,
       <line
+        key={keys[1]}
         x1={to.x}
         y1={"relative" in c && c.relative ? from.y : 0}
         x2={to.x}
         y2={to.y}
-        {...style(keyFor(c, `${suffix}-y`), HelperType.invisible)}
+        {...style(keys[1], HelperType.invisible)}
       />,
     ];
   }
@@ -114,13 +117,15 @@ function SVGViewer({
             x: c.relative ? prev.current.x + c.x : c.x,
             y: c.relative ? prev.current.y + c.y : c.y,
           };
+          const key = keyFor(c, i);
           prev.elems.push(
             <line
+              key={key}
               x1={prev.current.x}
               y1={prev.current.y}
               x2={next.x}
               y2={next.y}
-              {...style(keyFor(c, i), HelperType.implicit)}
+              {...style(key, HelperType.implicit)}
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
@@ -135,13 +140,15 @@ function SVGViewer({
             x: c.relative ? prev.current.x + c.x : c.x,
             y: c.relative ? prev.current.y + c.y : c.y,
           };
+          const key = keyFor(c, i);
           prev.elems.push(
             <line
+              key={key}
               x1={prev.current.x}
               y1={prev.current.y}
               x2={next.x}
               y2={next.y}
-              {...style(keyFor(c, i))}
+              {...style(key)}
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
@@ -156,13 +163,15 @@ function SVGViewer({
             x: c.relative ? prev.current.x + c.x : c.x,
             y: prev.current.y,
           };
+          const key = keyFor(c, i);
           prev.elems.push(
             <line
+              key={key}
               x1={prev.current.x}
               y1={prev.current.y}
               x2={next.x}
               y2={next.y}
-              {...style(keyFor(c, i))}
+              {...style(key)}
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
@@ -177,13 +186,15 @@ function SVGViewer({
             x: prev.current.x,
             y: c.relative ? prev.current.y + c.y : c.y,
           };
+          const key = keyFor(c, i);
           prev.elems.push(
             <line
+              key={key}
               x1={prev.current.x}
               y1={prev.current.y}
               x2={next.x}
               y2={next.y}
-              {...style(keyFor(c, i))}
+              {...style(key)}
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
@@ -195,13 +206,15 @@ function SVGViewer({
             break;
           }
           const next = prev.start;
+          const key = keyFor(c, i);
           prev.elems.push(
             <line
+              key={key}
               x1={prev.current.x}
               y1={prev.current.y}
               x2={next.x}
               y2={next.y}
-              {...style(keyFor(c, i))}
+              {...style(key)}
             />
           );
           prev.current = next;
@@ -223,48 +236,56 @@ function SVGViewer({
             x: c.relative ? prev.current.x + c.x2 : c.x2,
             y: c.relative ? prev.current.y + c.y2 : c.y2,
           };
+          const key = keyFor(c, i);
+          const keyCp1 = keyFor(c, `${i}-cp1`);
+          const keyCp2 = keyFor(c, `${i}-cp2`);
           prev.elems.push(
             <line
+              key={keyCp1}
               x1={prev.current.x}
               y1={prev.current.y}
               x2={cp1.x}
               y2={cp1.y}
-              {...style(keyFor(c, `${i}-cp1`), HelperType.default)}
+              {...style(keyCp1, HelperType.default)}
             />
           );
           prev.elems.push(
             <circle
+              key={keyCp1 + "circle"}
               cx={cp1.x}
               cy={cp1.y}
               r={stroke * 1.5}
-              {...style(keyFor(c, `${i}-cp1`), HelperType.default)}
+              {...style(keyCp1, HelperType.default)}
               fill="currentColor"
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, cp1, c, `${i}-cp1`));
           prev.elems.push(
             <line
+              key={keyCp2}
               x1={next.x}
               y1={next.y}
               x2={cp2.x}
               y2={cp2.y}
-              {...style(keyFor(c, `${i}-cp2`), HelperType.default)}
+              {...style(keyCp2, HelperType.default)}
             />
           );
           prev.elems.push(
             <circle
+              key={keyCp2 + "circle"}
               cx={cp2.x}
               cy={cp2.y}
               r={stroke * 1.5}
-              {...style(keyFor(c, `${i}-cp2`), HelperType.default)}
+              {...style(keyCp2, HelperType.default)}
               fill="currentColor"
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, cp2, c, `${i}-cp2`));
           prev.elems.push(
             <path
+              key={key}
               d={`M ${prev.current.x},${prev.current.y} ${encodeSVGPath(c)}`}
-              {...style(keyFor(c, i))}
+              {...style(key)}
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
@@ -302,46 +323,54 @@ function SVGViewer({
             x: c.relative ? prev.current.x + c.x2 : c.x2,
             y: c.relative ? prev.current.y + c.y2 : c.y2,
           };
+          const key = keyFor(c, i);
+          const keyCp1 = keyFor(c, `${i}-cp1`);
+          const keyCp2 = keyFor(c, `${i}-cp2`);
           prev.elems.push(
             <line
+              key={keyCp1}
               x1={prev.current.x}
               y1={prev.current.y}
               x2={cp1.x}
               y2={cp1.y}
-              {...style(keyFor(c, `${i}-cp1`), HelperType.implicit)}
+              {...style(keyCp1, HelperType.implicit)}
             />
           );
           prev.elems.push(
             <circle
+              key={keyCp1 + "circle"}
               cx={cp1.x}
               cy={cp1.y}
               r={stroke * 1.5}
-              {...style(keyFor(c, `${i}-cp1`), HelperType.implicit)}
+              {...style(keyCp1, HelperType.implicit)}
               fill="currentColor"
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, cp1, c, `${i}-cp1`));
           prev.elems.push(
             <line
+              key={keyCp2}
               x1={next.x}
               y1={next.y}
               x2={cp2.x}
               y2={cp2.y}
-              {...style(keyFor(c, `${i}-cp2`), HelperType.default)}
+              {...style(keyCp2, HelperType.default)}
             />
           );
           prev.elems.push(
             <circle
+              key={keyCp2 + "circle"}
               cx={cp2.x}
               cy={cp2.y}
               r={stroke * 1.5}
-              {...style(keyFor(c, `${i}-cp2`), HelperType.default)}
+              {...style(keyCp2, HelperType.default)}
               fill="currentColor"
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, cp2, c, `${i}-cp2`));
           prev.elems.push(
             <path
+              key={key}
               d={`M ${prev.current.x},${prev.current.y} ${encodeSVGPath({
                 type: SVGPathData.CURVE_TO,
                 relative: false,
@@ -351,7 +380,7 @@ function SVGViewer({
                 x2: cp2.x,
                 y2: cp2.y,
               })}`}
-              {...style(keyFor(c, i))}
+              {...style(key)}
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
@@ -370,38 +399,44 @@ function SVGViewer({
             x: c.relative ? prev.current.x + c.x1 : c.x1,
             y: c.relative ? prev.current.y + c.y1 : c.y1,
           };
+          const key = keyFor(c, i);
+          const keyCp = keyFor(c, `${i}-cp`);
           prev.elems.push(
             <line
+              key={keyCp}
               x1={prev.current.x}
               y1={prev.current.y}
               x2={cp1.x}
               y2={cp1.y}
-              {...style(keyFor(c, `${i}-cp`), HelperType.default)}
+              {...style(keyCp, HelperType.default)}
             />
           );
           prev.elems.push(
             <line
+              key={keyCp + "line2"}
               x1={next.x}
               y1={next.y}
               x2={cp1.x}
               y2={cp1.y}
-              {...style(keyFor(c, `${i}-cp`), HelperType.default)}
+              {...style(keyCp, HelperType.default)}
             />
           );
           prev.elems.push(
             <circle
+              key={keyCp + "circle"}
               cx={cp1.x}
               cy={cp1.y}
               r={stroke * 1.5}
-              {...style(keyFor(c, `${i}-cp`), HelperType.default)}
+              {...style(keyCp, HelperType.default)}
               fill="currentColor"
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, cp1, c, `${i}-cp`));
           prev.elems.push(
             <path
+              key={key}
               d={`M ${prev.current.x},${prev.current.y} ${encodeSVGPath(c)}`}
-              {...style(keyFor(c, i))}
+              {...style(key)}
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
@@ -455,36 +490,42 @@ function SVGViewer({
 
           const cp1 = backTrackCP(i, prev.current);
 
+          const key = keyFor(c, i);
+          const keyCp = keyFor(c, `${i}-cp`);
           prev.elems.push(
             <line
+              key={keyCp}
               x1={prev.current.x}
               y1={prev.current.y}
               x2={cp1.x}
               y2={cp1.y}
-              {...style(keyFor(c, `${i}-cp`), HelperType.implicit)}
+              {...style(keyCp, HelperType.implicit)}
             />
           );
           prev.elems.push(
             <line
+              key={keyCp + "line2"}
               x1={next.x}
               y1={next.y}
               x2={cp1.x}
               y2={cp1.y}
-              {...style(keyFor(c, `${i}-cp`), HelperType.implicit)}
+              {...style(keyCp, HelperType.implicit)}
             />
           );
           prev.elems.push(
             <circle
+              key={keyCp + "circle"}
               cx={cp1.x}
               cy={cp1.y}
               r={stroke * 1.5}
-              {...style(keyFor(c, `${i}-cp`), HelperType.implicit)}
+              {...style(keyCp, HelperType.implicit)}
               fill="currentColor"
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, cp1, c, `${i}-cp`));
           prev.elems.push(
             <path
+              key={key}
               d={`M ${prev.current.x},${prev.current.y} ${encodeSVGPath({
                 type: SVGPathData.QUAD_TO,
                 relative: false,
@@ -492,7 +533,7 @@ function SVGViewer({
                 x1: cp1.x,
                 y1: cp1.y,
               })}`}
-              {...style(keyFor(c, i))}
+              {...style(key)}
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
@@ -508,10 +549,13 @@ function SVGViewer({
             y: c.relative ? prev.current.y + c.y : c.y,
           };
 
+          const key = keyFor(c, i);
+
           prev.elems.push(
             <path
+              key={key}
               d={`M ${prev.current.x},${prev.current.y} ${encodeSVGPath(c)}`}
-              {...style(keyFor(c, i))}
+              {...style(key)}
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
