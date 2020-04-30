@@ -11,19 +11,19 @@
 }
 
 .viewer-wrapper {
+  position: sticky;
+  top: 0;
+  right: 0;
+  width: 100%;
+}
+
+.viewer-wrapper .sticky {
   position: absolute;
   top: 0;
   right: 0;
   width: 50%;
   min-width: 400px;
   height: 100vh;
-}
-
-.viewer-wrapper .sticky {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100%;
   justify-content: center;
 }
 
@@ -92,7 +92,7 @@ code {
 
 @media all and (max-width: 450px) {
   .cards,
-  .viewer-wrapper {
+  .sticky {
     width: 100vw;
     min-width: 0;
   }
