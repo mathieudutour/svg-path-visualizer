@@ -1,5 +1,4 @@
 import React from "react";
-import { useSpring, animated } from "react-spring";
 
 import {
   red,
@@ -16,32 +15,10 @@ import {
 const colors = [red, orange, yellow, green, olive, teal, blue, purple, pink];
 
 export default function StringArt({ style }: { style?: React.CSSProperties }) {
-  const [reset, setReset] = React.useState(false);
-
-  // @ts-ignore
-  const spring = useSpring<{ keyframe: number }>({
-    from: {
-      keyframe: 0,
-    },
-    to: {
-      keyframe: 1,
-    },
-    config: {
-      duration: 3500,
-    },
-    reset: reset,
-    onRest: () => setReset(false),
-  });
-
-  React.useEffect(() => {
-    if (!reset) {
-      requestAnimationFrame(() => setReset(true));
-    }
-  }, [reset, setReset]);
-
   const curveLength = 162.3225555419922;
 
   const timing = 0.02;
+  const duration = 3.5;
 
   return (
     <svg viewBox="-10 -10 120 120" style={style}>
@@ -59,59 +36,73 @@ export default function StringArt({ style }: { style?: React.CSSProperties }) {
         const startLine = timing * 18 + timing * 2 * (i - 1);
         return (
           <React.Fragment key={i}>
-            <animated.path
+            <path
               d={`M -3,${10 * i} H3`}
               fill="none"
               stroke="lightgray"
               strokeWidth="1"
               strokeDasharray="6"
-              strokeDashoffset={spring.keyframe.interpolate((k: number) =>
-                k < startLine1
-                  ? 6
-                  : Math.max(0, (6 * (startLine1 + timing - k)) / timing)
-              )}
-            />
-            <animated.path
+              strokeDashoffset="6"
+            >
+              <animate
+                attributeName="stroke-dashoffset"
+                values="6; 6; 0; 0"
+                repeatCount="indefinite"
+                keyTimes={`0; ${startLine1}; ${startLine1 + timing}; 1`}
+                dur={`${duration}s`}
+              />
+            </path>
+            <path
               d={`M ${10 * i},97 V103`}
               fill="none"
               stroke="lightgray"
               strokeWidth="1"
               strokeDasharray="6"
-              strokeDashoffset={spring.keyframe.interpolate((k: number) =>
-                k < startLine2
-                  ? 6
-                  : Math.max(0, (6 * (startLine2 + timing - k)) / timing)
-              )}
-            />
-            <animated.path
+            >
+              <animate
+                attributeName="stroke-dashoffset"
+                values="6; 6; 0; 0"
+                repeatCount="indefinite"
+                keyTimes={`0; ${startLine2}; ${startLine2 + timing}; 1`}
+                dur={`${duration}s`}
+              />
+            </path>
+            <path
               d={`M 0,${10 * i} L ${10 * i},100`}
               fill="none"
               stroke={colors[i - 1]}
               opacity={0.5}
               strokeDasharray={lineLength}
-              strokeDashoffset={spring.keyframe.interpolate((k: number) =>
-                k < startLine
-                  ? lineLength
-                  : Math.max(
-                      0,
-                      (lineLength * (startLine + 2 * timing - k)) / (timing * 2)
-                    )
-              )}
-            />
+              strokeDashoffset={lineLength}
+            >
+              <animate
+                attributeName="stroke-dashoffset"
+                values={`${lineLength}; ${lineLength}; 0; 0`}
+                repeatCount="indefinite"
+                keyTimes={`0; ${startLine}; ${startLine + 2 * timing}; 1`}
+                dur={`${duration}s`}
+              />
+            </path>
           </React.Fragment>
         );
       })}
 
-      <animated.path
+      <path
         d="M 0,0 Q 0,100 100,100"
         fill="none"
         stroke="black"
         strokeWidth="1"
         strokeDasharray={curveLength}
-        strokeDashoffset={spring.keyframe.interpolate((k: number) =>
-          k < 0.72 ? curveLength : Math.max(0, (curveLength * (0.82 - k)) / 0.1)
-        )}
-      />
+        strokeDashoffset={curveLength}
+      >
+        <animate
+          attributeName="stroke-dashoffset"
+          values={`${curveLength}; ${curveLength}; 0; 0`}
+          repeatCount="indefinite"
+          keyTimes={`0; 0.72; 0.82; 1`}
+          dur={`${duration}s`}
+        />
+      </path>
     </svg>
   );
 }
