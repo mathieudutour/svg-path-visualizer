@@ -8,6 +8,7 @@
   width: 50vw;
   min-width: 450px;
   padding: 20px;
+  pointer-events: none;
 }
 
 .viewer-wrapper {
@@ -40,6 +41,7 @@
 }
 
 .card {
+  pointer-events: initial;
   position: relative;
   margin: 0 10px 20px;
   background: white;
@@ -91,7 +93,7 @@ code {
 }
 
 /* Give space to see the svg below */
-@media all and (max-width: 950px) {
+@media all and (max-width: 850px) {
   .cards {
     margin-bottom: calc(100vh - 80px);
   }

@@ -1,12 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
 import { SVGPathData, encodeSVGPath } from "svg-pathdata";
-import { useTransition, animated } from "react-spring";
+import { useTransition, animated, useSpring } from "react-spring";
 import SVGViewer from "./SVGViewer";
 import CommandExplainer from "./CommandExplainer";
 import GitHubCorner from "./GitHubCorner";
 import Examples from "./Examples";
 import { BezierCurveExplanation } from "./BezierCurveExplanation";
+import { useWindowSize } from "./hooks/useWindowSize";
 
 import "./App.css";
 
@@ -21,13 +22,17 @@ function App() {
   const [error, setError] = React.useState<Error | null>(null);
   const [hovering, setHovering] = React.useState<string | null>(null);
   const showBezierCurveExplanation = useRouteMatch("/bezier-curve");
+  const [hidingCards, setHidingCards] = React.useState(false);
+  const windowSize = useWindowSize();
 
+  // on load, get the hash and set it as the svg path
+  // so that users can share the url with their svg path
   React.useEffect(() => {
     const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""));
-
     setPathString(hash || defaultPath);
   }, []);
 
+  // when the svg path changes, parse it and encode it in the hash
   React.useEffect(() => {
     try {
       const data = new SVGPathData(pathString);
@@ -46,6 +51,25 @@ function App() {
     [setPathString]
   );
 
+  const showCards = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      if (windowSize.width && windowSize.width < 850 && hidingCards) {
+        event.preventDefault();
+        setHidingCards(false);
+      }
+    },
+    [windowSize, setHidingCards, hidingCards]
+  );
+  const hideCards = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      if (windowSize.width && windowSize.width < 850 && !hidingCards) {
+        event.preventDefault();
+        setHidingCards(true);
+      }
+    },
+    [windowSize, setHidingCards, hidingCards]
+  );
+
   const overlayTransitions = useTransition(showBezierCurveExplanation, null, {
     from: { transform: "translate(-100%, 0)" },
     enter: { transform: "translate(0, 0)" },
@@ -62,10 +86,16 @@ function App() {
     }
   );
 
+  const cardsSpring = useSpring({
+    transform: `translate(${hidingCards ? "-100%" : "0%"}, 0) translate(${
+      hidingCards ? "50px" : "0px"
+    }, 0)`,
+  });
+
   return (
     <div className="App">
       <div className="viewer-wrapper">
-        <div className="sticky">
+        <div className="sticky" onClick={hideCards}>
           <GitHubCorner url="https://github.com/mathieudutour/svg-path-visualizer" />
           <SVGViewer
             pathData={pathData}
@@ -74,8 +104,8 @@ function App() {
           />
         </div>
       </div>
-      <div className="cards">
-        <div className="card">
+      <animated.div className="cards" style={cardsSpring}>
+        <div className="card" onClick={showCards}>
           <h1>
             SVG Path Visualizer{" "}
             <span role="img" aria-hidden>
@@ -104,7 +134,7 @@ function App() {
                     key={key}
                     style={props}
                   >
-                    <div className="card">
+                    <div className="card" onClick={showCards}>
                       <h2>Explanations</h2>
                       <CommandExplainer
                         pathData={pathData}
@@ -126,7 +156,7 @@ function App() {
                   key={key}
                   style={props}
                 >
-                  <div className="card" onClick={(e) => e.preventDefault()}>
+                  <div className="card" onClick={showCards}>
                     <Link className="cancel-button" to="/">
                       Cancel
                     </Link>
@@ -139,7 +169,7 @@ function App() {
               )
           )}
         </div>
-      </div>
+      </animated.div>
     </div>
   );
 }
