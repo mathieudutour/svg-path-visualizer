@@ -26,6 +26,9 @@
   min-width: 400px;
   height: 100vh;
   justify-content: center;
+  /* TODO! */
+  padding-right: 20px;
+  padding-bottom: 50px;
 }
 
 .viewer-wrapper .svg-viewer {
@@ -64,7 +67,7 @@ code {
   padding: 0;
 }
 
-.cards li + li {
+.cards li+li {
   padding-top: 10px;
 }
 
@@ -93,6 +96,7 @@ code {
 }
 
 /* Give space to see the svg below */
+
 @media all and (max-width: 850px) {
   .cards {
     margin-bottom: calc(100vh - 80px);
@@ -100,8 +104,7 @@ code {
 }
 
 @media all and (max-width: 450px) {
-  .cards,
-  .sticky {
+  .cards, .sticky {
     width: 100vw;
     min-width: 0;
   }
@@ -133,4 +136,25 @@ code {
   text-decoration: none;
   margin-left: 50%;
   transform: translate(-50%, 0);
+}
+
+/* TODO! */
+
+.grid-main {
+  stroke: #ccc;
+}
+
+.grid-sub-x {
+  stroke: #ccc;
+}
+
+.grid-sub-y {
+  stroke: #ccc;
+}
+
+.grid-label {
+  fill: #666;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  font-weight: 600;
 }

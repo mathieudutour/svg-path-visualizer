@@ -570,6 +570,7 @@ function SVGViewer({
       return prev;
     },
     {
+      grid: [] as React.ReactNode[],
       elems: [] as React.ReactNode[],
       overlay: [] as React.ReactNode[],
       current: { x: 0, y: 0 },
@@ -607,8 +608,82 @@ function SVGViewer({
     }
   }
 
+  const gridDeltaX = bounds[2] - bounds[0] - 50;
+  const gridDeltaY = bounds[3] - bounds[1] - 50;
+  const gridStep = 20; // TODO!
+  const gridIntervalsY = gridDeltaX / gridStep; // TODO!
+  const gridIntervalsX = gridDeltaY / gridStep; // TODO!
+
+  // main X axis
+  data.grid.push(
+    <line
+      key={'grid-main-x'}
+      x1={0}
+      y1={0}
+      x2={gridDeltaX}
+      y2={0}
+      className="grid-main"
+      strokeWidth={stroke / 1}
+    />
+  );
+  // main Y axis
+  data.grid.push([
+    <line
+      key={'grid-main-y'}
+      x1={0}
+      y1={0}
+      x2={0}
+      y2={gridDeltaY}
+      className="grid-main"
+      strokeWidth={stroke / 1}
+    />,
+    <text x={-20} y={-10} className="grid-label">(0,0)</text>
+  ]);
+  // sub X axis
+  for (let i = 1; i < gridIntervalsX; i++) {
+    const currY = i * gridStep;
+    data.grid.push(
+      <line
+        key={`grid-sub-x${i}`}
+        x1={0}
+        y1={currY}
+        x2={gridDeltaX}
+        y2={currY}
+        className="grid-sub-x"
+        strokeWidth={stroke / 5}
+        strokeDasharray={i % 5 === 0 ? 0 : gridStep / 10}
+      />
+    );
+    if (i % 5 === 0) {
+      data.grid.push(
+        <text x={-20} y={currY} className="grid-label">{currY}</text>
+      );
+    }
+  }
+  for (let i = 1; i < gridIntervalsY; i++) {
+    const currX = i * gridStep;
+    data.grid.push(
+      <line
+        key={`grid-sub-y${i}`}
+        x1={currX}
+        y1={0}
+        x2={currX}
+        y2={gridDeltaY}
+        className="grid-sub-y"
+        strokeWidth={stroke / 5}
+        strokeDasharray={i % 5 === 0 ? 0 : gridStep / 10}
+      />
+    );
+    if (i % 5 === 0) {
+      data.grid.push(
+        <text x={currX} y={-10} className="grid-label">{currX}</text>
+      );
+    }
+  }
+
   return (
     <svg className="svg-viewer" viewBox={bounds.join(" ")}>
+      {data.grid}
       {data.elems}
       {data.overlay}
     </svg>
