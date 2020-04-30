@@ -55,23 +55,17 @@ export function BezierCurveExplanation() {
       <StringArt style={{ width: "50%", margin: "auto", display: "block" }} />
       <h2>How does it work?</h2>
       <p>
-        To get a feel of how Bézier Curve works, imagine a plane 🛩flying between
-        2 airports. The control points are the instructions from the control
-        towers of the respective airports regarding the direction of the runways
-        and fast the plane needs to leave 🛫/arrive 🛬. The longer the distance
-        between the airport and the control point, the faster the plane needs to
-        be.
+        To get a feel of how Bézier Curve works, imagine you are building a
+        segment of a railway track between 2 places 🚂. The direction and the
+        speed of the train at the beginning and the end are a constraint given
+        by the railway controllers in order.
       </p>
       <p>
-        Between the airports, the flight needs to be as smooth as possible,
-        which means turning the least possible while respect the instructions of
-        the control towers.
+        Between the 2 places, the journey needs to be as smooth as possible,
+        which means that the track needs to turn the least possible while
+        respecting the instructions of the controllers.
       </p>
-      <p>
-        <em>
-          Maybe a spaceship metaphor would be better? Also need some drawings
-        </em>
-      </p>
+
       <h2>How does it translate to SVG?</h2>
       <h3>The Curve command</h3>
       <p>

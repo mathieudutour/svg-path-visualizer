@@ -29,7 +29,7 @@ function App() {
   // on load, get the hash and set it as the svg path
   // so that users can share the url with their svg path
   React.useEffect(() => {
-    if (navigator.userAgent === "ReactSnap" || showBezierCurveExplanation) {
+    if (navigator.userAgent === "ReactSnap") {
       return;
     }
     const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""));
@@ -42,7 +42,9 @@ function App() {
       const data = new SVGPathData(pathString);
       setPathData({ commands: data.commands, bounds: data.getBounds() });
       setError(null);
-      window.location.hash = encodeURIComponent(pathString);
+      if (!showBezierCurveExplanation) {
+        window.location.hash = encodeURIComponent(pathString);
+      }
     } catch (err) {
       setError(err);
     }
@@ -75,6 +77,7 @@ function App() {
   );
 
   const overlayTransitions = useTransition(showBezierCurveExplanation, null, {
+    initial: { transform: "translate(0, 0)" },
     from: { transform: "translate(-100%, 0)" },
     enter: { transform: "translate(0, 0)" },
     leave: { transform: "translate(-100%, 0)" },
