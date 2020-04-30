@@ -8,6 +8,7 @@ import GitHubCorner from "./GitHubCorner";
 import Examples from "./Examples";
 import { BezierCurveExplanation } from "./BezierCurveExplanation";
 import { useWindowSize } from "./hooks/useWindowSize";
+import ScrollToTop from "./ScrollToTop";
 
 import "./App.css";
 
@@ -176,6 +177,7 @@ function App() {
 
 export default () => (
   <Router>
+    <ScrollToTop />
     <App />
   </Router>
 );
