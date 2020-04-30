@@ -90,6 +90,13 @@ code {
   padding: 30px 10px 20px 30px;
 }
 
+/* Give space to see the svg below */
+@media all and (max-width: 950px) {
+  .cards {
+    margin-bottom: calc(100vh - 80px);
+  }
+}
+
 @media all and (max-width: 450px) {
   .cards,
   .sticky {
