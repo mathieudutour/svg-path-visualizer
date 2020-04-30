@@ -75,6 +75,7 @@ code {
   text-decoration: underline dotted black;
   text-underline-position: under;
   cursor: help;
+  color: black;
 }
 
 .explanations {
@@ -107,10 +108,11 @@ code {
   font-size: 16px;
   color: #0074d9;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .done-button {
-  display: block;
+  display: inline-block;
   margin: 20px auto;
   padding: 10px 30px;
   background: transparent;
@@ -119,4 +121,7 @@ code {
   font-size: 16px;
   color: #0074d9;
   cursor: pointer;
+  text-decoration: none;
+  margin-left: 50%;
+  transform: translate(-50%, 0);
 }

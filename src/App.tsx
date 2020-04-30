@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
 import { SVGPathData, encodeSVGPath } from "svg-pathdata";
 import { useTransition, animated } from "react-spring";
 import SVGViewer from "./SVGViewer";
@@ -17,39 +18,26 @@ function App() {
     commands: new SVGPathData("").commands,
     bounds: new SVGPathData("").getBounds(),
   });
-  const [
-    showingBezierCurveExplanation,
-    setShowingBezierCurveExplanation,
-  ] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
   const [hovering, setHovering] = React.useState<string | null>(null);
+  const showBezierCurveExplanation = useRouteMatch("/bezier-curve");
 
   React.useEffect(() => {
     const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""));
 
-    if (hash === "bezier-curve") {
-      setShowingBezierCurveExplanation(true);
-      setPathString(defaultPath);
-    } else {
-      setPathString(hash || defaultPath);
-    }
+    setPathString(hash || defaultPath);
   }, []);
 
   React.useEffect(() => {
     try {
       const data = new SVGPathData(pathString);
-      const shouldUpdateHash =
-        !showingBezierCurveExplanation &&
-        (data.commands.length || pathData.commands.length);
       setPathData({ commands: data.commands, bounds: data.getBounds() });
       setError(null);
-      if (shouldUpdateHash) {
-        window.location.hash = encodeURIComponent(pathString);
-      }
+      window.location.hash = encodeURIComponent(pathString);
     } catch (err) {
       setError(err);
     }
-  }, [pathString, showingBezierCurveExplanation]);
+  }, [pathString]);
 
   const updateString = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,27 +46,11 @@ function App() {
     [setPathString]
   );
 
-  React.useEffect(() => {
-    if (showingBezierCurveExplanation) {
-      window.scrollTo({
-        behavior: "smooth",
-        top: 0,
-      });
-      window.location.hash = "bezier-curve";
-    } else {
-      window.location.hash = encodeURIComponent(pathString);
-    }
-  }, [showingBezierCurveExplanation]);
-
-  const overlayTransitions = useTransition(
-    showingBezierCurveExplanation,
-    null,
-    {
-      from: { transform: "translate(-100%, 0)" },
-      enter: { transform: "translate(0, 0)" },
-      leave: { transform: "translate(-100%, 0)" },
-    }
-  );
+  const overlayTransitions = useTransition(showBezierCurveExplanation, null, {
+    from: { transform: "translate(-100%, 0)" },
+    enter: { transform: "translate(0, 0)" },
+    leave: { transform: "translate(-100%, 0)" },
+  });
 
   const explanationTransitions = useTransition(
     pathData,
@@ -88,23 +60,6 @@ function App() {
       enter: { transform: "translate(0, 0)" },
       leave: { transform: "translate(-100%, 0)", position: "absolute" },
     }
-  );
-
-  const showBezierCurveExplanation = React.useCallback(
-    (ev: any) => {
-      setShowingBezierCurveExplanation(true);
-      ev.preventDefault();
-    },
-    [setShowingBezierCurveExplanation]
-  );
-
-  const hideBezierCurveExplanation = React.useCallback(
-    (ev: any) => {
-      if (!ev.defaultPrevented) {
-        setShowingBezierCurveExplanation(false);
-      }
-    },
-    [setShowingBezierCurveExplanation]
   );
 
   return (
@@ -119,7 +74,7 @@ function App() {
           />
         </div>
       </div>
-      <div className="cards" onClick={hideBezierCurveExplanation}>
+      <div className="cards">
         <div className="card">
           <h1>
             SVG Path Visualizer{" "}
@@ -152,7 +107,6 @@ function App() {
                     <div className="card">
                       <h2>Explanations</h2>
                       <CommandExplainer
-                        showBezierCurveExplanation={showBezierCurveExplanation}
                         pathData={pathData}
                         hovering={hovering}
                         setHovering={setHovering}
@@ -162,6 +116,7 @@ function App() {
                 )
             )
           : null}
+
         <div className="explanations">
           {overlayTransitions.map(
             ({ item, key, props }) =>
@@ -172,19 +127,13 @@ function App() {
                   style={props}
                 >
                   <div className="card" onClick={(e) => e.preventDefault()}>
-                    <button
-                      className="cancel-button"
-                      onClick={hideBezierCurveExplanation}
-                    >
+                    <Link className="cancel-button" to="/">
                       Cancel
-                    </button>
+                    </Link>
                     <BezierCurveExplanation />
-                    <button
-                      className="done-button"
-                      onClick={hideBezierCurveExplanation}
-                    >
+                    <Link className="done-button" to="/">
                       Got it
-                    </button>
+                    </Link>
                   </div>
                 </animated.div>
               )
@@ -195,4 +144,8 @@ function App() {
   );
 }
 
-export default App;
+export default () => (
+  <Router>
+    <App />
+  </Router>
+);

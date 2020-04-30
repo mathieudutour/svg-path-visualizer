@@ -554,12 +554,12 @@ function SVGViewer({
       const left =
         (width / height - containerSize.width / containerSize.height) * height;
       bounds[1] -= left / 2;
-      bounds[3] += left;
+      bounds[3] += left / 2;
     } else {
       const left =
         (containerSize.width / containerSize.height - width / height) * width;
       bounds[0] -= left / 2;
-      bounds[2] += left;
+      bounds[2] += left / 2;
     }
   }
 
