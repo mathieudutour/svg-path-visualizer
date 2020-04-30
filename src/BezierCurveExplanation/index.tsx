@@ -55,7 +55,7 @@ export function BezierCurveExplanation() {
       <StringArt style={{ width: "50%", margin: "auto", display: "block" }} />
       <h2>How does it work?</h2>
       <p>
-        To get a feel of how Bézier Curve works, imagine you are building a
+        To get a feel of how Bézier Curves work, imagine you are building a
         segment of a railway track between 2 places <span aria-hidden>🚂</span>.
         The direction and the speed of the train at the beginning and the end
         are a constraint given by the railway controllers in order.
