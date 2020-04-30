@@ -3,26 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-helmet": "^6.0.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1",
     "react-spring": "^8.0.27",
-    "svg-pathdata": "^5.0.4",
-    "typescript": "~3.7.2"
+    "svg-pathdata": "^5.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postbuild": "react-snap"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,6 +33,25 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.1.5"
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-helmet": "^5.0.15",
+    "@types/react-loadable": "^5.5.3",
+    "@types/react-router-dom": "^5.1.5",
+    "react-scripts": "3.4.1",
+    "react-snap": "^1.23.0",
+    "typescript": "~3.7.2"
+  },
+  "reactSnap": {
+    "include": [
+      "/",
+      "/bezier-curve"
+    ],
+    "asyncScriptTags": true
   }
 }

@@ -29,6 +29,9 @@ function App() {
   // on load, get the hash and set it as the svg path
   // so that users can share the url with their svg path
   React.useEffect(() => {
+    if (navigator.userAgent === "ReactSnap") {
+      return;
+    }
     const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""));
     setPathString(hash || defaultPath);
   }, []);
