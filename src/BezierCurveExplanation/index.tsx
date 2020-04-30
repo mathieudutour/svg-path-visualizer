@@ -7,6 +7,7 @@ import {
   QuadraticBezierCurveIllustration,
   SmoothQuadraticBezierCurveIllustration,
 } from "./BezierCurveIllustrations";
+import { WhatPath, FullPath, StraightPath } from "./Train";
 
 // @ts-ignore
 import sketchScreencastMp4 from "./bezier-curve-sketch.mp4";
@@ -58,13 +59,46 @@ export function BezierCurveExplanation() {
         To get a feel of how Bézier Curves work, imagine you are building a
         segment of a railway track between 2 places <span aria-hidden>🚂</span>.
         The direction and the speed of the train at the beginning and the end
-        are a constraint given by the railway controllers in order.
+        are a constraint given by the railway controllers in order for the
+        traffic to be good across the line.
       </p>
+
+      <WhatPath style={{ width: "100%", margin: "auto", display: "block" }} />
       <p>
         Between the 2 places, the journey needs to be as smooth as possible,
         which means that the track needs to turn the least possible while
         respecting the instructions of the controllers.
       </p>
+      <div className="text-with-illustration">
+        <p>
+          In our case that means continuing in the same direction as we arrive
+          while slowly turning to the right.
+        </p>
+        <FullPath
+          style={{
+            width: "50%",
+            display: "block",
+            flexShrink: 0,
+            flexBasis: "50%",
+          }}
+        />
+      </div>
+      <div className="text-with-illustration">
+        <p>
+          If there was no speed contraint at the end (and so no direction), we
+          could turn until we face the end and then go straight towards it.
+          Otherwise we need to take some leaway to match the direction at the
+          end.
+        </p>
+        <StraightPath
+          style={{
+            width: "50%",
+            display: "block",
+            flexShrink: 0,
+            flexBasis: "50%",
+          }}
+        />
+      </div>
 
       <h2>How does it translate to SVG?</h2>
       <h3>The Curve command</h3>

@@ -4,3 +4,8 @@
 .bezier-explanation video {
   width: 100%;
 }
+
+.text-with-illustration {
+  display: flex;
+  flex-direction: row;
+}
