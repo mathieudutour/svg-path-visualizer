@@ -34,7 +34,7 @@ export function BezierCurveExplanation() {
         "Control" points.
       </p>
       <p>
-        Most design tools allow you to draw Bézier curves (sometime called "Pen
+        Most design tools allow you to draw Bézier curves (sometimes called "Pen
         tool" as in Photoshop, Illustrator, or Figma - or "Vector tool" as in
         Sketch) and let you define those 4 points.
       </p>
@@ -44,7 +44,7 @@ export function BezierCurveExplanation() {
       </video>
       <p>
         The curve goes from the "Start" point to the "End" point while the
-        "Control" point define its curvature.
+        "Control" points define its curvature.
       </p>
       <p>
         The reason why those curves are so popular is because of how "smooth"
@@ -71,7 +71,7 @@ export function BezierCurveExplanation() {
       </p>
       <div className="text-with-illustration">
         <p>
-          In our case that means continuing in the same direction as we arrive
+          In our case, that means continuing in the same direction as we arrive
           while slowly turning to the right.
         </p>
         <FullPath
@@ -85,9 +85,9 @@ export function BezierCurveExplanation() {
       </div>
       <div className="text-with-illustration">
         <p>
-          If there was no speed contraint at the end (and so no direction), we
+          If there was no speed constraint at the end (and so no direction), we
           could turn until we face the end and then go straight towards it.
-          Otherwise we need to take some leaway to match the direction at the
+          Otherwise, we need to take some leeway to match the direction at the
           end.
         </p>
         <StraightPath
@@ -112,12 +112,12 @@ export function BezierCurveExplanation() {
       />
       <h3>The Smooth Curve command</h3>
       <p>
-        There are also some special cases of Bézier Curves which have shortcut
+        There are also some special cases of Bézier Curves that have shortcut
         notation in SVG.
       </p>
       <p>
         A common case is when you have multiple curves one after the other and
-        you want it to snoothly transition between them. To do so, you need to
+        you want it to smoothly transition between them. To do so, you need to
         have the first control point of the next curve be the reflection of the
         second control point of the previous curve. So as long as you specify
         one, you shouldn't need to specify the other one. That's what the{" "}
@@ -128,12 +128,12 @@ export function BezierCurveExplanation() {
       />
       <p>
         If you look back at the Sketch screencast, you will notice that we
-        actually define the reflection of the second control point, implictly
+        actually define the reflection of the second control point, implicitly
         preparing for the next curve segment.
       </p>
       <h3>The Quadratic Curve command</h3>
       <p>
-        Another case is when both control point are superimposed. In that case,
+        Another case is when both control points are superimposed. In that case,
         you also don't need to specify them both, only one is enough. That what
         the <code>Q</code> command is for (Q for quadratic).
       </p>
@@ -143,9 +143,9 @@ export function BezierCurveExplanation() {
       <p>That's our curve stitching drawing!</p>
       <h3>The Smooth Quadratic Curve command</h3>
       <p>
-        Now what if we want to continue our quadratic Bézier Curve with another
-        quadratic Bézier Curve? Well we only have to specify the end point! That
-        what the <code>T</code> command is for (T for Smooth Quadratic
+        Now, what if we want to continue our quadratic Bézier Curve with another
+        quadratic Bézier Curve? Well, we only have to specify the end point!
+        That what the <code>T</code> command is for (T for Smooth Quadratic
         obviously).
       </p>
       <SmoothQuadraticBezierCurveIllustration
