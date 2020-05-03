@@ -26,9 +26,6 @@
   min-width: 400px;
   height: 100vh;
   justify-content: center;
-  /* TODO! */
-  padding-right: 20px;
-  padding-bottom: 50px;
 }
 
 .viewer-wrapper .svg-viewer {
@@ -140,16 +137,23 @@ code {
 
 /* TODO! */
 
+.grid {
+  /* color: red; */
+  color: #ccc;
+}
+
 .grid-main {
-  stroke: #ccc;
+  stroke: currentColor;
+  stroke-width: calc(var(--grid-stroke) / 2.5);
 }
 
-.grid-sub-x {
-  stroke: #ccc;
+.grid-sub {
+  stroke: currentColor;
+  stroke-width: calc(var(--grid-stroke) / 5);
 }
 
-.grid-sub-y {
-  stroke: #ccc;
+.grid-dashed {
+  stroke-dasharray: calc(var(--grid-scale) / 50);
 }
 
 .grid-label {

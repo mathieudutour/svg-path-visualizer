@@ -608,82 +608,86 @@ function SVGViewer({
     }
   }
 
-  const gridDeltaX = bounds[2] - bounds[0] - 50;
-  const gridDeltaY = bounds[3] - bounds[1] - 50;
-  const gridStep = 20; // TODO!
-  const gridIntervalsY = gridDeltaX / gridStep; // TODO!
-  const gridIntervalsX = gridDeltaY / gridStep; // TODO!
+  const gridXMin = bounds[0];
+  const gridXMax = bounds[2];
+  const gridYMin = bounds[1];
+  const gridYMax = bounds[3];
+  const gridDeltaX = bounds[2] - bounds[0];
+  const gridDeltaY = bounds[3] - bounds[1];
+  const gridTenScaleX = Math.pow(10, Math.floor(Math.log10(gridDeltaX)));
+  const gridTenScaleY = Math.pow(10, Math.floor(Math.log10(gridDeltaY)));
+  const gridTenScale = Math.min(gridTenScaleX, gridTenScaleY);
+  const gridStep = gridTenScale / 5;
+  const gridFirstLineX = gridXMin - (gridXMin % gridStep);
+  const gridFirstLineY = gridYMin - (gridYMin % gridStep);
+  const gridIntervalsY = gridDeltaX / gridStep;
+  const gridIntervalsX = gridDeltaY / gridStep;
 
-  // main X axis
-  data.grid.push(
-    <line
-      key={'grid-main-x'}
-      x1={0}
-      y1={0}
-      x2={gridDeltaX}
-      y2={0}
-      className="grid-main"
-      strokeWidth={stroke / 1}
-    />
-  );
-  // main Y axis
-  data.grid.push([
-    <line
-      key={'grid-main-y'}
-      x1={0}
-      y1={0}
-      x2={0}
-      y2={gridDeltaY}
-      className="grid-main"
-      strokeWidth={stroke / 1}
-    />,
-    <text x={-20} y={-10} className="grid-label">(0,0)</text>
-  ]);
   // sub X axis
   for (let i = 1; i < gridIntervalsX; i++) {
-    const currY = i * gridStep;
+    const currY = gridFirstLineY + i * gridStep;
+    const isYYY = currY % gridTenScale === 0;
+    const classNames = []
+    if (currY === 0) {
+      classNames.push('grid-main');
+    } else {
+      classNames.push('grid-sub');
+      if (!isYYY) {
+        classNames.push('grid-dashed');
+      }
+    }
     data.grid.push(
       <line
-        key={`grid-sub-x${i}`}
-        x1={0}
+        key={`grid-x${i}`}
+        x1={gridXMin}
         y1={currY}
-        x2={gridDeltaX}
+        x2={gridXMax}
         y2={currY}
-        className="grid-sub-x"
-        strokeWidth={stroke / 5}
-        strokeDasharray={i % 5 === 0 ? 0 : gridStep / 10}
+        className={classNames.join(' ')}
       />
     );
-    if (i % 5 === 0) {
+    if (isYYY) {
       data.grid.push(
-        <text x={-20} y={currY} className="grid-label">{currY}</text>
+        <text key={`grid-sub-x${i}-label`} x={-20} y={currY} className="grid-label">{currY}</text>
       );
     }
   }
   for (let i = 1; i < gridIntervalsY; i++) {
-    const currX = i * gridStep;
+    const currX = gridFirstLineX + i * gridStep;
+    const isXXX = currX % gridTenScale === 0;
+    const classNames = []
+    if (currX === 0) {
+      classNames.push('grid-main');
+    } else {
+      classNames.push('grid-sub');
+      if (!isXXX) {
+        classNames.push('grid-dashed');
+      }
+    }
     data.grid.push(
       <line
-        key={`grid-sub-y${i}`}
+        key={`grid-y${i}`}
         x1={currX}
-        y1={0}
+        y1={gridYMin}
         x2={currX}
-        y2={gridDeltaY}
-        className="grid-sub-y"
-        strokeWidth={stroke / 5}
-        strokeDasharray={i % 5 === 0 ? 0 : gridStep / 10}
+        y2={gridYMax}
+        className={classNames.join(' ')}
       />
     );
-    if (i % 5 === 0) {
+    if (isXXX) {
       data.grid.push(
-        <text x={currX} y={-10} className="grid-label">{currX}</text>
+        <text key={`grid-sub-y${i}-label`} x={currX} y={-10} className="grid-label">{currX}</text>
       );
     }
   }
 
   return (
     <svg className="svg-viewer" viewBox={bounds.join(" ")}>
-      {data.grid}
+      {/*
+      // @ts-ignore */}
+      <g className="grid" style={{ '--grid-scale': gridTenScale, '--grid-stroke': stroke }}>
+        {data.grid}
+      </g>
       {data.elems}
       {data.overlay}
     </svg>
