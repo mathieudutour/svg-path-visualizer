@@ -668,7 +668,7 @@ function SVGViewer({
 
       if (isMultipleOfPow10Scale) {
         const labelCoordinates = {} as any; // TODO TS to fix
-        labelCoordinates[axis] = -20; // TODO use a better calculation based on the scale factor
+        labelCoordinates[axis] = -10 * gridProps['scalePow10'] / 100; // TODO use a better calculation based on the grid[x/y].delta which is more precise?
         labelCoordinates[otherAxis] = currAxisValue;
 
         gridElements.labels.push(
@@ -683,7 +683,7 @@ function SVGViewer({
     <svg className="svg-viewer" viewBox={bounds.join(" ")}>
       {/*
       // @ts-ignore */}
-      <g className="grid" style={{ '--grid-scale': gridProps['scalePow10'], '--grid-stroke': stroke }}>
+      <g className="grid" style={{ '--grid-scale-factor-pow10': gridProps['scalePow10'], '--grid-stroke': stroke }}>
         {data.grid}
       </g>
       {data.elems}
