@@ -218,6 +218,7 @@ function SVGViewer({
             />
           );
           prev.current = next;
+          prev.start = { x: NaN, y: NaN };
           break;
         }
         case SVGPathData.CURVE_TO: {
@@ -301,23 +302,27 @@ function SVGViewer({
             y: c.relative ? prev.current.y + c.y : c.y,
           };
           const previousCommand = commands[i - 1];
-          const cp1 = {
+          const reflectedCp1 = {
             x:
               previousCommand &&
               (previousCommand.type === SVGPathData.SMOOTH_CURVE_TO ||
                 previousCommand.type === SVGPathData.CURVE_TO)
                 ? previousCommand.relative
-                  ? prev.current.x - previousCommand.x2
-                  : prev.current.x - (previousCommand.x2 - prev.current.x)
-                : prev.current.x,
+                  ? previousCommand.x2 - previousCommand.x
+                  : previousCommand.x2 - prev.current.x
+                : 0,
             y:
               previousCommand &&
               (previousCommand.type === SVGPathData.SMOOTH_CURVE_TO ||
                 previousCommand.type === SVGPathData.CURVE_TO)
                 ? previousCommand.relative
-                  ? prev.current.y - previousCommand.y2
-                  : prev.current.y - (previousCommand.y2 - prev.current.y)
-                : prev.current.y,
+                  ? previousCommand.y2 - previousCommand.y
+                  : previousCommand.y2 - prev.current.y
+                : 0,
+          };
+          const cp1 = {
+            x: prev.current.x - reflectedCp1.x,
+            y: prev.current.y - reflectedCp1.y,
           };
           const cp2 = {
             x: c.relative ? prev.current.x + c.x2 : c.x2,
