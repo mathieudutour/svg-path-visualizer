@@ -12,7 +12,7 @@ const examples = [
     path: "M2,2 L8,2 L2,5 L8,5 L2,8 L8,8",
     viewBox: "0 0 10 10",
   },
-  { name: "Arc", path: "M2,5 A 5 25 0 0 1 8 8", viewBox: "0 0 10 10" },
+  { name: "Arc", path: "M1,5 A 5 3 20 0 1 8 8", viewBox: "0 0 10 10" },
   { name: "Smooth", path: "M2,5 S2,-2 4,5 S7,8 8,4", viewBox: "0 0 10 10" },
   {
     name: "Heart",
