@@ -1,7 +1,13 @@
 import React from "react";
 import { SVGPathData, encodeSVGPath } from "svg-pathdata";
 import { SVGCommand } from "svg-pathdata/lib/types";
-import { keyFor, assertNever, HelperType } from "./utils";
+import {
+  keyFor,
+  assertNever,
+  HelperType,
+  arcEllipseCenter,
+  pointCircle,
+} from "./utils";
 import { useWindowSize } from "./hooks/useWindowSize";
 import { red, blue } from "./colors";
 
@@ -43,7 +49,8 @@ function SVGViewer({
               ? blue
               : type === HelperType.default || type === HelperType.implicit
               ? "lightgrey"
-              : type === HelperType.invisible
+              : type === HelperType.invisible ||
+                type === HelperType.defaultChild
               ? "transparent"
               : "black",
           pointerEvents: (type === HelperType.invisible
@@ -555,6 +562,98 @@ function SVGViewer({
           };
 
           const key = keyFor(c, i);
+
+          const center = arcEllipseCenter(
+            prev.current.x,
+            prev.current.y,
+            c.rX,
+            c.rY,
+            c.xRot,
+            c.lArcFlag,
+            c.sweepFlag,
+            next.x,
+            next.y
+          );
+
+          prev.elems.push(
+            <path
+              key={`${key}-oval`}
+              d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${
+                c.xRot
+              } ${c.lArcFlag ? 0 : 1} ${c.sweepFlag ? 0 : 1} ${next.x} ${
+                next.y
+              }`}
+              {...style(`${key}-oval`, HelperType.default)}
+            />
+          );
+
+          prev.elems.push(
+            <path
+              key={`${key}-oval2`}
+              d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${
+                c.xRot
+              } ${c.lArcFlag ? 0 : 1} ${c.sweepFlag} ${next.x} ${next.y}`}
+              {...style(`${key}-oval2`, HelperType.invisible)}
+            />
+          );
+          prev.elems.push(
+            <path
+              key={`${key}-oval3`}
+              d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${
+                c.xRot
+              } ${c.lArcFlag} ${c.sweepFlag ? 0 : 1} ${next.x} ${next.y}`}
+              {...style(`${key}-oval3`, HelperType.invisible)}
+            />
+          );
+
+          const radius1 = pointCircle(center, c.rX, c.xRot);
+          const radius2 = pointCircle(center, c.rY, c.xRot + 90);
+          prev.elems.push(
+            <path
+              key={`${key}-radius`}
+              d={`M ${center.x},${center.y} L ${radius1.x},${radius1.y} M ${center.x},${center.y} L ${radius2.x},${radius2.y}`}
+              {...style(`${key}-radius`, HelperType.default)}
+            />
+          );
+
+          prev.elems.push(
+            <line
+              key={`${key}-radius-x`}
+              x1={center.x}
+              y1={center.y}
+              x2={radius1.x}
+              y2={radius1.y}
+              {...style(`${key}-radius-x`, HelperType.defaultChild)}
+            />
+          );
+          prev.elems.push(
+            <line
+              key={`${key}-radius-y`}
+              x1={center.x}
+              y1={center.y}
+              x2={radius2.x}
+              y2={radius2.y}
+              {...style(`${key}-radius-y`, HelperType.defaultChild)}
+            />
+          );
+
+          const rot = pointCircle(center, c.rX / 2, c.xRot);
+          const flags = [0, c.xRot < 0 ? 0 : 1];
+          prev.elems.push(
+            <path
+              key={`${key}-rotation`}
+              d={`M ${center.x},${center.y} L ${center.x + c.rX},${
+                center.y
+              } M ${center.x + c.rX / 2},${center.y} A ${c.rX / 2},${
+                c.rX / 2
+              } 0 ${flags.join(" ")} ${rot.x},${rot.y}`}
+              {...style(`${key}-rotation`, HelperType.invisible)}
+            />
+          );
+
+          prev.overlay.push(
+            ...pointHelpers(prev.current, center, c, `${i}-center`)
+          );
 
           prev.elems.push(
             <path

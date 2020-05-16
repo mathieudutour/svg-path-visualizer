@@ -390,8 +390,14 @@ function CommandExplainer({
                   <span {...style(keyFor(c, `${i}-command`))}>
                     {c.relative ? "a" : "A"}{" "}
                   </span>
+                  <span {...style(keyFor(c, `${i}-radius-x`))}>{c.rX}</span>
+                  <span {...style(keyFor(c, `${i}-radius`))}>,</span>
+                  <span {...style(keyFor(c, `${i}-radius-y`))}>{c.rY}</span>
+                  <span {...style(keyFor(c, i))}> </span>
+                  <span {...style(keyFor(c, `${i}-rotation`))}>{c.xRot}</span>
                   <span {...style(keyFor(c, i))}>
-                    {c.rX},{c.rY} {c.xRot} {c.lArcFlag} {c.sweepFlag}{" "}
+                    {" "}
+                    {c.lArcFlag} {c.sweepFlag}{" "}
                   </span>
                   <span {...style(keyFor(c, `${i}-x`))}>{c.x}</span>
                   <span {...style(keyFor(c, i))}>,</span>
@@ -404,6 +410,16 @@ function CommandExplainer({
                   </span>{" "}
                   curve from the current point to a new point{" "}
                   {printPoint(c, c, i)}
+                </p>
+                <p>
+                  Its <span {...style(keyFor(c, `${i}-radius`))}>radii</span>{" "}
+                  are {printPoint({ x: c.rX, y: c.rY }, c, `${i}-radius`)}, and
+                  its{" "}
+                  <span {...style(keyFor(c, `${i}-rotation`))}>rotation</span>{" "}
+                  is{" "}
+                  <span {...style(keyFor(c, `${i}-rotation`))}>
+                    {c.xRot} degrees
+                  </span>
                 </p>
               </div>
             );
