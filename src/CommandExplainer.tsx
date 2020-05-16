@@ -413,13 +413,27 @@ function CommandExplainer({
                 </p>
                 <p>
                   Its <span {...style(keyFor(c, `${i}-radius`))}>radii</span>{" "}
-                  are {printPoint({ x: c.rX, y: c.rY }, c, `${i}-radius`)}, and
-                  its{" "}
-                  <span {...style(keyFor(c, `${i}-rotation`))}>rotation</span>{" "}
-                  is{" "}
-                  <span {...style(keyFor(c, `${i}-rotation`))}>
-                    {c.xRot} degrees
-                  </span>
+                  are {printPoint({ x: c.rX, y: c.rY }, c, `${i}-radius`)}, and{" "}
+                  {c.xRot === 0 ? (
+                    <span>
+                      with{" "}
+                      <span {...style(keyFor(c, `${i}-rotation`))}>
+                        no rotation
+                      </span>
+                    </span>
+                  ) : (
+                    <span>
+                      its{" "}
+                      <span {...style(keyFor(c, `${i}-rotation`))}>
+                        rotation
+                      </span>{" "}
+                      is{" "}
+                      <span {...style(keyFor(c, `${i}-rotation`))}>
+                        {Math.abs(c.xRot)} degrees (
+                        {c.xRot > 0 ? "clockwise" : "anti-clockwise"})
+                      </span>
+                    </span>
+                  )}
                 </p>
               </div>
             );

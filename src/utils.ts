@@ -55,7 +55,10 @@ export const arcEllipseCenter = (
   const co =
     sign *
     Math.sqrt(
-      (rx * rx * ry * ry - rx * rx * y1p * y1p - ry * ry * x1p * x1p) /
+      Math.max(
+        rx * rx * ry * ry - rx * rx * y1p * y1p - ry * ry * x1p * x1p,
+        0
+      ) /
         (rx * rx * y1p * y1p + ry * ry * x1p * x1p)
     );
 
