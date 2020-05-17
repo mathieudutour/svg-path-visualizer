@@ -395,10 +395,15 @@ function CommandExplainer({
                   <span {...style(keyFor(c, `${i}-radius-y`))}>{c.rY}</span>
                   <span {...style(keyFor(c, i))}> </span>
                   <span {...style(keyFor(c, `${i}-rotation`))}>{c.xRot}</span>
-                  <span {...style(keyFor(c, i))}>
-                    {" "}
-                    {c.lArcFlag} {c.sweepFlag}{" "}
+                  <span {...style(keyFor(c, i))}> </span>
+                  <span {...style(keyFor(c, `${i}-oval-large`))}>
+                    {c.lArcFlag}
                   </span>
+                  <span {...style(keyFor(c, i))}> </span>
+                  <span {...style(keyFor(c, `${i}-oval-sweep`))}>
+                    {c.sweepFlag}
+                  </span>
+                  <span {...style(keyFor(c, i))}> </span>
                   <span {...style(keyFor(c, `${i}-x`))}>{c.x}</span>
                   <span {...style(keyFor(c, i))}>,</span>
                   <span {...style(keyFor(c, `${i}-y`))}>{c.y}</span>
@@ -434,6 +439,20 @@ function CommandExplainer({
                       </span>
                     </span>
                   )}
+                </p>
+                <p>
+                  Out of the{" "}
+                  <span {...style(keyFor(c, `${i}-oval`))}>
+                    4 possible arcs described by the above parameters
+                  </span>
+                  , this arc is the one{" "}
+                  <span {...style(keyFor(c, `${i}-oval-large`))}>
+                    {c.lArcFlag ? "greater" : "lesser"} than 180 degrees
+                  </span>{" "}
+                  and{" "}
+                  <span {...style(keyFor(c, `${i}-oval-sweep`))}>
+                    moving at {c.sweepFlag ? "positive" : "negative"} angles
+                  </span>
                 </p>
               </div>
             );

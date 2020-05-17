@@ -13,6 +13,7 @@ export enum HelperType {
   default = "default",
   implicit = "implicit",
   invisible = "invisible",
+  invisibleFull = "invisibleFull",
   defaultChild = "defaultChild",
 }
 

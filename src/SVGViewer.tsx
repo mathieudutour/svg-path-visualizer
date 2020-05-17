@@ -49,11 +49,13 @@ function SVGViewer({
               ? blue
               : type === HelperType.default || type === HelperType.implicit
               ? "lightgrey"
-              : type === HelperType.invisible ||
+              : type === HelperType.invisibleFull ||
+                type === HelperType.invisible ||
                 type === HelperType.defaultChild
               ? "transparent"
               : "black",
-          pointerEvents: (type === HelperType.invisible
+          pointerEvents: (type === HelperType.invisibleFull ||
+          type === HelperType.invisible
             ? "none"
             : "initial") as "none" | "initial",
         },
@@ -64,9 +66,15 @@ function SVGViewer({
             ? stroke * 2
             : "none",
         strokeWidth: stroke,
-        "data-key": type === HelperType.invisible ? undefined : key,
+        "data-key":
+          type === HelperType.invisibleFull || type === HelperType.invisible
+            ? undefined
+            : key,
         onMouseEnter: () => {
-          if (type === HelperType.invisible) {
+          if (
+            type === HelperType.invisibleFull ||
+            type === HelperType.invisible
+          ) {
             return;
           }
           if (resetTimeout) {
@@ -75,7 +83,10 @@ function SVGViewer({
           setHovering(key);
         },
         onMouseLeave: () => {
-          if (type === HelperType.invisible) {
+          if (
+            type === HelperType.invisibleFull ||
+            type === HelperType.invisible
+          ) {
             return;
           }
           resetTimeout = setTimeout(() => setHovering(null), 50);
@@ -577,32 +588,32 @@ function SVGViewer({
 
           prev.elems.push(
             <path
-              key={`${key}-oval`}
+              key={`${key}-oval-${c.lArcFlag ? 0 : 1}-${c.sweepFlag ? 0 : 1}`}
               d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${
                 c.xRot
               } ${c.lArcFlag ? 0 : 1} ${c.sweepFlag ? 0 : 1} ${next.x} ${
                 next.y
               }`}
-              {...style(`${key}-oval`, HelperType.default)}
+              {...style(`${key}-oval`, HelperType.implicit)}
             />
           );
 
           prev.elems.push(
             <path
-              key={`${key}-oval2`}
+              key={`${key}-oval-${c.lArcFlag ? 0 : 1}-${c.sweepFlag}`}
               d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${
                 c.xRot
               } ${c.lArcFlag ? 0 : 1} ${c.sweepFlag} ${next.x} ${next.y}`}
-              {...style(`${key}-oval2`, HelperType.invisible)}
+              {...style(`${key}-oval`, HelperType.invisible)}
             />
           );
           prev.elems.push(
             <path
-              key={`${key}-oval3`}
+              key={`${key}-oval-${c.lArcFlag}-${c.sweepFlag ? 0 : 1}`}
               d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${
                 c.xRot
               } ${c.lArcFlag} ${c.sweepFlag ? 0 : 1} ${next.x} ${next.y}`}
-              {...style(`${key}-oval3`, HelperType.invisible)}
+              {...style(`${key}-oval`, HelperType.invisible)}
             />
           );
 
@@ -662,6 +673,51 @@ function SVGViewer({
               {...style(key)}
             />
           );
+
+          prev.elems.push(
+            <path
+              key={`${key}-oval-${c.lArcFlag}-${c.sweepFlag}`}
+              d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${c.xRot} ${c.lArcFlag} ${c.sweepFlag} ${next.x} ${next.y}`}
+              {...style(`${key}-oval`, HelperType.invisibleFull)}
+            />
+          );
+
+          prev.elems.push(
+            <path
+              key={`${key}-oval-large-${c.sweepFlag}`}
+              d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${c.xRot} ${c.lArcFlag} ${c.sweepFlag} ${next.x} ${next.y}`}
+              {...style(`${key}-oval-large`, HelperType.invisibleFull)}
+            />
+          );
+
+          prev.elems.push(
+            <path
+              key={`${key}-oval-large-${c.sweepFlag ? 0 : 1}`}
+              d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${
+                c.xRot
+              } ${c.lArcFlag} ${c.sweepFlag ? 0 : 1} ${next.x} ${next.y}`}
+              {...style(`${key}-oval-large`, HelperType.invisibleFull)}
+            />
+          );
+
+          prev.elems.push(
+            <path
+              key={`${key}-oval-sweep-${c.lArcFlag}`}
+              d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${c.xRot} ${c.lArcFlag} ${c.sweepFlag} ${next.x} ${next.y}`}
+              {...style(`${key}-oval-sweep`, HelperType.invisibleFull)}
+            />
+          );
+
+          prev.elems.push(
+            <path
+              key={`${key}-oval-sweep-${c.lArcFlag ? 0 : 1}`}
+              d={`M ${prev.current.x},${prev.current.y} A ${c.rX} ${c.rY} ${
+                c.xRot
+              } ${c.lArcFlag ? 0 : 1} ${c.sweepFlag} ${next.x} ${next.y}`}
+              {...style(`${key}-oval-sweep`, HelperType.invisibleFull)}
+            />
+          );
+
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
 
           prev.current = next;
