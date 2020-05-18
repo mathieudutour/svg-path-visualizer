@@ -48,7 +48,7 @@ function App() {
     } catch (err) {
       setError(err);
     }
-  }, [pathString]);
+  }, [pathString]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateString = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

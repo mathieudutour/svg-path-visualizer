@@ -1,4 +1,5 @@
 import React from "react";
+/* eslint-disable jsx-a11y/accessible-emoji */
 
 export function WhatPath({ style }: { style?: React.CSSProperties }) {
   return (
