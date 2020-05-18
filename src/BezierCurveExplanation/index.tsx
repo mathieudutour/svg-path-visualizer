@@ -25,6 +25,18 @@ export function BezierCurveExplanation() {
           name="description"
           content="What are Bézier Curves, how do they work, and how do they relate to SVG Paths"
         />
+        <meta property="og:title" content="SVG Path and Bézier Curves" />
+        <meta
+          property="og:description"
+          content="What are Bézier Curves, how do they work, and how do they relate to SVG Paths"
+        />
+        <meta property="og:image" content="/some-image.png" />
+        <meta property="og:url" content="/bezier-curve" />
+        <meta property="og:site_name" content="SVG Path and Bézier Curves" />
+        <meta
+          name="twitter:image:alt"
+          content="What are Bézier Curves, how do they work, and how do they relate to SVG Paths"
+        />
       </Helmet>
       <h1>SVG Path and Bézier Curves</h1>
       <p>
