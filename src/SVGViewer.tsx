@@ -486,10 +486,10 @@ function SVGViewer({
             if (previousCommand.type === SVGPathData.QUAD_TO) {
               return {
                 x: previousCommand.relative
-                  ? currentPoint.x - previousCommand.x1
+                  ? currentPoint.x - (previousCommand.x1 - previousCommand.x)
                   : currentPoint.x - (previousCommand.x1 - currentPoint.x),
                 y: previousCommand.relative
-                  ? currentPoint.y - previousCommand.y1
+                  ? currentPoint.y - (previousCommand.y1 - previousCommand.y)
                   : currentPoint.y - (previousCommand.y1 - currentPoint.y),
               };
             }
