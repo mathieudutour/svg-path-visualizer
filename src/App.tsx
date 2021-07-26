@@ -181,9 +181,11 @@ function App() {
   );
 }
 
-export default () => (
+const AppWithRouter = () => (
   <Router>
     <ScrollToTop />
     <App />
   </Router>
 );
+
+export default AppWithRouter;

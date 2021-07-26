@@ -494,24 +494,20 @@ function SVGViewer({
               };
             }
             if (previousCommand.type === SVGPathData.SMOOTH_QUAD_TO) {
-              const previousCP = backTrackCP(index - 1, {
-                x: previousCommand.relative
-                  ? currentPoint.x - previousCommand.x
-                  : previousCommand.x,
-                y: previousCommand.relative
-                  ? currentPoint.y - previousCommand.y
-                  : previousCommand.y,
-              });
-
+              if (!prev.previousCP) {
+                return currentPoint;
+              }
               return {
-                x: currentPoint.x - (previousCP.x - currentPoint.x),
-                y: currentPoint.y - (previousCP.y - currentPoint.y),
+                x: currentPoint.x - (prev.previousCP.x - currentPoint.x),
+                y: currentPoint.y - (prev.previousCP.y - currentPoint.y),
               };
             }
             return currentPoint;
           };
 
           const cp1 = backTrackCP(i, prev.current);
+
+          prev.previousCP = cp1;
 
           const key = keyFor(c, i);
           const keyCp = keyFor(c, `${i}-cp`);
@@ -734,6 +730,7 @@ function SVGViewer({
       overlay: [] as React.ReactNode[],
       current: { x: 0, y: 0 },
       start: { x: NaN, y: NaN },
+      previousCP: { x: NaN, y: NaN },
     }
   );
 
