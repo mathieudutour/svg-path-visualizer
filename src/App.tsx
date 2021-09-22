@@ -45,7 +45,7 @@ function App() {
       if (!showBezierCurveExplanation) {
         window.location.hash = encodeURIComponent(pathString);
       }
-    } catch (err) {
+    } catch (err: any) {
       setError(err);
     }
   }, [pathString]); // eslint-disable-line react-hooks/exhaustive-deps
