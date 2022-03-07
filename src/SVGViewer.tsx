@@ -147,6 +147,7 @@ function SVGViewer({
             />
           );
           prev.overlay.push(...pointHelpers(prev.current, next, c, i));
+          prev.start = next;
           prev.current = next;
           break;
         }
