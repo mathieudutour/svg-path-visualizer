@@ -5,26 +5,36 @@ import { SVGCommand } from "svg-pathdata/lib/types";
 import { keyFor, assertNever, HelperType } from "./utils";
 import { red, blue } from "./colors";
 
-function CommandExplainer({
-  pathData,
-  hovering,
-  setHovering,
-}: {
-  pathData: {
-    commands: SVGCommand[];
-    bounds: {
-      minX: number;
-      maxX: number;
-      minY: number;
-      maxY: number;
+const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
+  {
+    pathData,
+    hovering,
+    setHovering,
+  }: {
+    pathData: {
+      commands: SVGCommand[];
+      bounds: {
+        minX: number;
+        maxX: number;
+        minY: number;
+        maxY: number;
+      };
     };
-  };
-  hovering: string | null;
-  setHovering: (newHover: string | null) => void;
-}) {
+    hovering: string | null;
+    setHovering: (newHover: string | null) => void;
+  },
+  ref: React.Ref<{ scrollTo: (key: string) => void }>
+) {
+  React.useImperativeHandle(ref, () => ({
+    scrollTo(key: string) {
+      document.getElementById(key)?.scrollIntoView({ behavior: "smooth" });
+    },
+  }));
+
   const style = React.useCallback(
     (key: string, type?: HelperType) => {
       return {
+        id: key,
         style: {
           color:
             hovering === key || (hovering && key.startsWith(hovering))
@@ -466,6 +476,6 @@ function CommandExplainer({
       })}
     </ul>
   );
-}
+});
 
 export default CommandExplainer;

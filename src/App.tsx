@@ -25,6 +25,7 @@ function App() {
   const showBezierCurveExplanation = useRouteMatch("/bezier-curve");
   const [hidingCards, setHidingCards] = React.useState(false);
   const windowSize = useWindowSize();
+  const explainerRef = React.useRef<{ scrollTo: (key: string) => void }>(null);
 
   // on load, get the hash and set it as the svg path
   // so that users can share the url with their svg path
@@ -76,6 +77,15 @@ function App() {
     [windowSize, setHidingCards, hidingCards]
   );
 
+  const scrollTo = React.useCallback(
+    (key: string) => {
+      if (explainerRef.current) {
+        explainerRef.current.scrollTo(key);
+      }
+    },
+    [explainerRef]
+  );
+
   const overlayTransitions = useTransition(showBezierCurveExplanation, null, {
     initial: { transform: "translate(0, 0)" },
     from: { transform: "translate(-100%, 0)" },
@@ -108,6 +118,7 @@ function App() {
             pathData={pathData}
             hovering={hovering}
             setHovering={setHovering}
+            scrollTo={scrollTo}
           />
         </div>
       </div>
@@ -144,6 +155,7 @@ function App() {
                     <div className="card" onClick={showCards}>
                       <h2>Explanations</h2>
                       <CommandExplainer
+                        ref={explainerRef}
                         pathData={pathData}
                         hovering={hovering}
                         setHovering={setHovering}

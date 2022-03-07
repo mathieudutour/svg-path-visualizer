@@ -17,6 +17,7 @@ function SVGViewer({
   pathData,
   hovering,
   setHovering,
+  scrollTo,
 }: {
   pathData: {
     commands: SVGCommand[];
@@ -29,6 +30,7 @@ function SVGViewer({
   };
   hovering: string | null;
   setHovering: (newHover: string | null) => void;
+  scrollTo: (key: string) => void;
 }) {
   const windowSize = useWindowSize();
 
@@ -91,9 +93,18 @@ function SVGViewer({
           }
           resetTimeout = setTimeout(() => setHovering(null), 50);
         },
+        onClick: () => {
+          if (
+            type === HelperType.invisibleFull ||
+            type === HelperType.invisible
+          ) {
+            return;
+          }
+          scrollTo(key);
+        },
       };
     },
-    [stroke, hovering, setHovering]
+    [stroke, hovering, setHovering, scrollTo]
   );
 
   function pointHelpers(
