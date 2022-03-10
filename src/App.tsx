@@ -1,16 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
-import { SVGPathData, encodeSVGPath } from "svg-pathdata";
-import { useTransition, animated, useSpring } from "react-spring";
-import SVGViewer from "./SVGViewer";
-import CommandExplainer from "./CommandExplainer";
-import GitHubCorner from "./GitHubCorner";
-import Examples from "./Examples";
+import { animated, useSpring, useTransition } from "react-spring";
+import { encodeSVGPath, SVGPathData } from "svg-pathdata";
+import "./App.css";
 import { BezierCurveExplanation } from "./BezierCurveExplanation";
+import CommandExplainer from "./CommandExplainer";
+import Examples from "./Examples";
+import GitHubCorner from "./GitHubCorner";
 import { useWindowSize } from "./hooks/useWindowSize";
 import ScrollToTop from "./ScrollToTop";
-
-import "./App.css";
+import SVGViewer from "./SVGViewer";
 
 const defaultPath = `M140 20C73 20 20 74 20 140c0 135 136 170 228 303 88-132 229-173 229-303 0-66-54-120-120-120-48 0-90 28-109 69-19-41-60-69-108-69z`;
 
@@ -52,7 +51,7 @@ function App() {
   }, [pathString]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateString = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setPathString(event.target.value);
     },
     [setPathString]
@@ -134,7 +133,7 @@ function App() {
             Enter an SVG path data (the string inside the <code>d</code>{" "}
             attribute) to visualize it and discover all its different commands
           </p>
-          <input
+          <textarea
             value={pathString}
             onChange={updateString}
             placeholder="Enter a SVG path..."
