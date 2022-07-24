@@ -738,6 +738,7 @@ function SVGViewer({
       return prev;
     },
     {
+      grid: [] as React.ReactNode[],
       elems: [] as React.ReactNode[],
       overlay: [] as React.ReactNode[],
       current: { x: 0, y: 0 },
@@ -776,8 +777,84 @@ function SVGViewer({
     }
   }
 
+  const gridProps = {
+    'x': {
+      min: bounds[0],
+      max: bounds[2],
+      delta: bounds[2] - bounds[0],
+    },
+    'y': {
+      min: bounds[1],
+      max: bounds[3],
+      delta: bounds[3] - bounds[1],
+    }
+  } as any; // TODO TS to fix
+
+  // we need the labels to be always on top of the lines, but since SVG doesn't support z-index via CSS
+  // we need to generate them separately and then push them in the right order in the "data.grid" element
+  const gridElements = {
+    lines: [],
+    labels: [],
+  } as any; // TODO TS to fix
+
+  // TODO: discuss in PR if is really needed, or we can assume they have the same scale
+  // TODO explain what the "power of ten scale" is
+  const gridTenScaleX = Math.pow(10, Math.floor(Math.log10(gridProps['x'].delta)));
+  const gridTenScaleY = Math.pow(10, Math.floor(Math.log10(gridProps['y'].delta)));
+  gridProps['scalePow10'] = Math.min(gridTenScaleX, gridTenScaleY);
+
+  // TODO explain what a "step" is
+  gridProps['step'] = gridProps['scalePow10'] / 5;
+
+  ['x', 'y'].forEach((axis) => {
+    // not very elegant, but it works
+    // TODO alternative, use some "magic" code that uses "object.keys(gridProps) and works out the "other" key ?
+    const otherAxis = axis === 'x' ? 'y' : 'x';
+    const firstLine = gridProps[otherAxis].min - (gridProps[otherAxis].min % gridProps['step']);
+    const intervals = gridProps[otherAxis].delta / gridProps['step'];
+
+    for (let i = 1; i < intervals; i++) {
+      const currAxisValue = firstLine + i * gridProps['step'];
+      const isMultipleOfPow10Scale = currAxisValue % gridProps['scalePow10'] === 0;
+      const classNames = []
+      if (currAxisValue === 0) {
+        classNames.push('grid-main');
+      } else {
+        classNames.push('grid-sub');
+        if (!isMultipleOfPow10Scale) {
+          classNames.push('grid-dashed');
+        }
+      }
+      const lineCoordinates = {} as any; // TODO TS to fix
+      lineCoordinates[`${axis}1`] = gridProps[axis].min;
+      lineCoordinates[`${axis}2`] = gridProps[axis].max;
+      lineCoordinates[`${otherAxis}1`] = currAxisValue;
+      lineCoordinates[`${otherAxis}2`] = currAxisValue;
+
+      gridElements.lines.push(
+        <line key={`grid-${axis}${i}`} className={classNames.join(' ')} {...lineCoordinates} />
+      );
+
+      if (isMultipleOfPow10Scale) {
+        const labelCoordinates = {} as any; // TODO TS to fix
+        labelCoordinates[axis] = -10 * gridProps['scalePow10'] / 100; // TODO use a better calculation based on the grid[x/y].delta which is more precise?
+        labelCoordinates[otherAxis] = currAxisValue;
+
+        gridElements.labels.push(
+          <text key={`grid-${axis}${i}-label`} className="grid-label" {...labelCoordinates}>{currAxisValue}</text>
+        );
+      }
+    }
+    data.grid.push(gridElements.lines, gridElements.labels);
+  })
+
   return (
     <svg className="svg-viewer" viewBox={bounds.join(" ")}>
+      {/*
+      // @ts-ignore */}
+      <g className="grid" style={{ '--grid-scale-factor-pow10': gridProps['scalePow10'], '--grid-stroke': stroke }}>
+        {data.grid}
+      </g>
       {data.elems}
       {data.overlay}
     </svg>

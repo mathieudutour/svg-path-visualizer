@@ -65,7 +65,7 @@ code {
   padding: 0;
 }
 
-.cards li + li {
+.cards li+li {
   padding-top: 10px;
 }
 
@@ -94,6 +94,7 @@ code {
 }
 
 /* Give space to see the svg below */
+
 @media all and (max-width: 850px) {
   .cards {
     margin-bottom: calc(100vh - 80px);
@@ -101,8 +102,7 @@ code {
 }
 
 @media all and (max-width: 450px) {
-  .cards,
-  .sticky {
+  .cards, .sticky {
     width: 100vw;
     min-width: 0;
   }
@@ -134,4 +134,32 @@ code {
   text-decoration: none;
   margin-left: 50%;
   transform: translate(-50%, 0);
+}
+
+/* TODO! */
+
+.grid {
+  /* color: red; */
+  color: #ccc;
+}
+
+.grid-main {
+  stroke: currentColor;
+  stroke-width: calc(var(--grid-stroke) / 2.5);
+}
+
+.grid-sub {
+  stroke: currentColor;
+  stroke-width: calc(var(--grid-stroke) / 5);
+}
+
+.grid-dashed {
+  stroke-dasharray: calc(var(--grid-stroke) / 2.5);
+}
+
+.grid-label {
+  fill: #666;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: calc(10px * var(--grid-scale-factor-pow10) / 100);
+  font-weight: 600;
 }
