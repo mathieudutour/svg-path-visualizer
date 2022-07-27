@@ -751,8 +751,8 @@ function SVGViewer({
   const bounds = [
     pathData.bounds.minX - margin,
     pathData.bounds.minY - margin,
-    pathData.bounds.maxX + margin,
-    pathData.bounds.maxY + margin,
+    pathData.bounds.maxX + margin * 2,
+    pathData.bounds.maxY + margin * 2,
   ];
 
   const width = bounds[2] - bounds[0];
