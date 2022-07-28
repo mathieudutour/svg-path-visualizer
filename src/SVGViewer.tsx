@@ -748,15 +748,15 @@ function SVGViewer({
 
   const margin = stroke * 10;
 
-  const bounds = [
+  const viewBox = [
     pathData.bounds.minX - margin,
     pathData.bounds.minY - margin,
-    pathData.bounds.maxX + margin,
-    pathData.bounds.maxY + margin,
+    pathData.bounds.maxX - pathData.bounds.minX + margin * 2,
+    pathData.bounds.maxY - pathData.bounds.minY + margin * 2,
   ];
 
-  const width = bounds[2] - bounds[0];
-  const height = bounds[3] - bounds[1];
+  const width = viewBox[2];
+  const height = viewBox[3];
 
   if (windowSize.width && windowSize.height) {
     const containerSize = {
@@ -764,20 +764,22 @@ function SVGViewer({
       height: windowSize.height,
     };
     if (width / height > containerSize.width / containerSize.height) {
-      const left =
+      // portrait
+      const additionalViewBoxHeight =
         (width / height - containerSize.width / containerSize.height) * height;
-      bounds[1] -= left / 2;
-      bounds[3] += left / 2;
+      viewBox[1] -= additionalViewBoxHeight / 2;
+      viewBox[3] += additionalViewBoxHeight;
     } else {
-      const left =
+      // landscape
+      const additionalViewBoxWidth =
         (containerSize.width / containerSize.height - width / height) * width;
-      bounds[0] -= left / 2;
-      bounds[2] += left / 2;
+      viewBox[0] -= additionalViewBoxWidth / 2;
+      viewBox[2] += additionalViewBoxWidth;
     }
   }
 
   return (
-    <svg className="svg-viewer" viewBox={bounds.join(" ")}>
+    <svg className="svg-viewer" viewBox={viewBox.join(" ")}>
       {data.elems}
       {data.overlay}
     </svg>
