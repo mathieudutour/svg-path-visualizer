@@ -61,7 +61,7 @@ const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
         <span {...style(keyFor(c, `${suffix}-x`))}>
           {" "}
           x:{" "}
-          {"relative" in c && c.relative
+          {"relative" in c && c.relative && String(suffix).indexOf("radius") === -1
             ? `previous point ${point.x < 0 ? "-" : "+"} `
             : `${point.x < 0 ? "-" : ""}`}
           {Math.abs(point.x)}
@@ -70,7 +70,7 @@ const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
         <span {...style(keyFor(c, `${suffix}-y`))}>
           {" "}
           y:{" "}
-          {"relative" in c && c.relative
+          {"relative" in c && c.relative && String(suffix).indexOf("radius") === -1
             ? `previous point ${point.y < 0 ? "-" : "+"} `
             : `${point.y < 0 ? "-" : ""}`}
           {Math.abs(point.y)}{" "}
