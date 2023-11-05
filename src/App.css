@@ -53,6 +53,7 @@
 }
 
 code {
+  color: black;
   background: rgba(0, 0, 0, 0.05);
   padding: 3px 5px;
 }
@@ -134,4 +135,31 @@ code {
   text-decoration: none;
   margin-left: 50%;
   transform: translate(-50%, 0);
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #fafafa;
+    background: #09090b;
+  }
+
+  .card {
+    background: #18181b;
+  }
+
+  code {
+    color: #fafafa;
+    background: #27272a;
+  }
+
+  textarea {
+    color: #fafafa;
+    background: #262626;
+    border-color: #52525b;
+  }
+
+  .help-link {
+    text-decoration-color: #fafafa;
+    color: #fafafa;
+  }
 }

@@ -55,7 +55,7 @@ function SVGViewer({
                 type === HelperType.invisible ||
                 type === HelperType.defaultChild
               ? "transparent"
-              : "black",
+              : undefined,
           pointerEvents: (type === HelperType.invisibleFull ||
           type === HelperType.invisible
             ? "none"
