@@ -16,6 +16,7 @@
   text-align: center;
   cursor: pointer;
   background: white;
+  stroke: black;
 }
 
 .example + .example {
@@ -30,4 +31,13 @@
   display: block;
   width: 50px;
   margin: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+  .example {
+    color: #fafafa;
+    background: #262626;
+    border-color: #52525b;
+    stroke: #fafafa;
+  }
 }
