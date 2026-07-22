@@ -1,6 +1,9 @@
 import React from "react";
-import { SVGPathData, encodeSVGPath } from "svg-pathdata";
-import { SVGCommand } from "svg-pathdata/lib/types";
+import {
+  SVGPathData,
+  encodeSVGPath,
+  type SVGCommand,
+} from "svg-pathdata";
 import {
   keyFor,
   assertNever,

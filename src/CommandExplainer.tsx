@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { SVGPathData } from "svg-pathdata";
-import { SVGCommand } from "svg-pathdata/lib/types";
+import { SVGPathData, type SVGCommand } from "svg-pathdata";
 import { keyFor, assertNever, HelperType } from "./utils";
 import { red, blue } from "./colors";
 
@@ -53,7 +52,8 @@ const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
   function printPoint(
     point: { x: number; y: number },
     c: SVGCommand,
-    suffix: number | string
+    suffix: number | string,
+    relative = "relative" in c && c.relative
   ) {
     return (
       <>
@@ -61,9 +61,7 @@ const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
         <span {...style(keyFor(c, `${suffix}-x`))}>
           {" "}
           x:{" "}
-          {"relative" in c &&
-          c.relative &&
-          String(suffix).indexOf("radius") === -1
+          {relative && String(suffix).indexOf("radius") === -1
             ? `previous point ${point.x < 0 ? "-" : "+"} `
             : `${point.x < 0 ? "-" : ""}`}
           {Math.abs(point.x)}
@@ -72,9 +70,7 @@ const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
         <span {...style(keyFor(c, `${suffix}-y`))}>
           {" "}
           y:{" "}
-          {"relative" in c &&
-          c.relative &&
-          String(suffix).indexOf("radius") === -1
+          {relative && String(suffix).indexOf("radius") === -1
             ? `previous point ${point.y < 0 ? "-" : "+"} `
             : `${point.y < 0 ? "-" : ""}`}
           {Math.abs(point.y)}{" "}
@@ -103,8 +99,8 @@ const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
           {!point.y
             ? ""
             : point.y < 0
-            ? `top ${Math.abs(point.y)}`
-            : `bottom ${Math.abs(point.y)}`}
+            ? `up ${Math.abs(point.y)}`
+            : `down ${Math.abs(point.y)}`}
         </span>
       </>
     );
@@ -122,7 +118,8 @@ const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
             : "";
         let child: React.ReactNode;
         switch (c.type) {
-          case SVGPathData.MOVE_TO:
+          case SVGPathData.MOVE_TO: {
+            const isRelativeMove = c.relative && i !== 0;
             child = (
               <div>
                 <code>
@@ -135,7 +132,7 @@ const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
                 </code>
                 <p>
                   {penCommand}
-                  {c.relative ? (
+                  {isRelativeMove ? (
                     <span>
                       <span {...style(keyFor(c, `${i}-command`))}>Move</span> it{" "}
                       {printRelativePoint(c, c, i)} from the current position
@@ -143,13 +140,14 @@ const CommandExplainer = React.forwardRef(function CommandExplainerWithRef(
                   ) : (
                     <span>
                       <span {...style(keyFor(c, `${i}-command`))}>Move</span> it
-                      to {printPoint(c, c, i)}
+                      to {printPoint(c, c, i, false)}
                     </span>
                   )}
                 </p>
               </div>
             );
             break;
+          }
           case SVGPathData.CLOSE_PATH:
             child = (
               <div>

@@ -1,9 +1,11 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import App from "./App";
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test("renders the SVG path visualizer", () => {
+  render(<App />);
+
+  expect(
+    screen.getByRole("heading", { name: /svg path visualizer/i })
+  ).toBeInTheDocument();
 });

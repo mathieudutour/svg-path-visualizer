@@ -1,5 +1,4 @@
-import { encodeSVGPath } from "svg-pathdata";
-import { SVGCommand } from "svg-pathdata/lib/types";
+import { encodeSVGPath, type SVGCommand } from "svg-pathdata";
 
 export function keyFor(command: SVGCommand, suffix: number | string) {
   return `${encodeSVGPath(command)}-${suffix}`;

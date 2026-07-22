@@ -15,23 +15,23 @@ I believe there is a lot of potential to explain more concept (Bezier curve, con
 ## Project setup
 
 ```bash
-yarn
+npm install
 ```
 
 ### Compiles and hot-reloads for development
 
 ```bash
-yarn start
+npm run dev
 ```
 
 ### Compiles and minifies for production
 
 ```bash
-yarn build
+npm run build
 ```
 
 ### Run your tests
 
 ```bash
-yarn test
+npm test
 ```

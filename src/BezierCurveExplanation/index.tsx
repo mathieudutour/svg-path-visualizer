@@ -1,5 +1,4 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 import StringArt from "./StringArt";
 import {
   CubicBezierCurveIllustration,
@@ -19,24 +18,6 @@ import "./index.css";
 export function BezierCurveExplanation() {
   return (
     <div className="bezier-explanation">
-      <Helmet>
-        <title>SVG Path and Bézier Curves</title>
-        <meta
-          name="description"
-          content="What are Bézier Curves, how do they work, and how do they relate to SVG Paths"
-        />
-        <meta property="og:title" content="SVG Path and Bézier Curves" />
-        <meta
-          property="og:description"
-          content="What are Bézier Curves, how do they work, and how do they relate to SVG Paths"
-        />
-        <meta property="og:url" content="/bezier-curve" />
-        <meta property="og:site_name" content="SVG Path and Bézier Curves" />
-        <meta
-          name="twitter:image:alt"
-          content="What are Bézier Curves, how do they work, and how do they relate to SVG Paths"
-        />
-      </Helmet>
       <h1>SVG Path and Bézier Curves</h1>
       <p>
         Bézier Curves are one of the 3 command types (with lines and arcs) of an

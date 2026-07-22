@@ -1,6 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
-import { animated, useSpring, useTransition } from "react-spring";
+import { animated, useSpring, useTransition } from "@react-spring/web";
+import { BrowserRouter as Router, Link, useMatch } from "react-router-dom";
 import { encodeSVGPath, SVGPathData } from "svg-pathdata";
 import "./App.css";
 import { BezierCurveExplanation } from "./BezierCurveExplanation";
@@ -8,12 +8,13 @@ import CommandExplainer from "./CommandExplainer";
 import Examples from "./Examples";
 import GitHubCorner from "./GitHubCorner";
 import { useWindowSize } from "./hooks/useWindowSize";
+import { curveMetadata, homeMetadata, Metadata } from "./metadata";
 import ScrollToTop from "./ScrollToTop";
 import SVGViewer from "./SVGViewer";
 
 const defaultPath = `M140 20C73 20 20 74 20 140c0 135 136 170 228 303 88-132 229-173 229-303 0-66-54-120-120-120-48 0-90 28-109 69-19-41-60-69-108-69z`;
 
-function App() {
+export function App() {
   const [pathString, setPathString] = React.useState("");
   const [pathData, setPathData] = React.useState({
     commands: new SVGPathData("").commands,
@@ -21,7 +22,7 @@ function App() {
   });
   const [error, setError] = React.useState<Error | null>(null);
   const [hovering, setHovering] = React.useState<string | null>(null);
-  const showBezierCurveExplanation = useRouteMatch("/bezier-curve");
+  const showBezierCurveExplanation = Boolean(useMatch("/bezier-curve"));
   const [hidingCards, setHidingCards] = React.useState(false);
   const windowSize = useWindowSize();
   const explainerRef = React.useRef<{ scrollTo: (key: string) => void }>(null);
@@ -85,22 +86,22 @@ function App() {
     [explainerRef]
   );
 
-  const overlayTransitions = useTransition(showBezierCurveExplanation, null, {
+  const overlayTransitions = useTransition(showBezierCurveExplanation, {
     initial: { transform: "translate(0, 0)" },
     from: { transform: "translate(-100%, 0)" },
     enter: { transform: "translate(0, 0)" },
     leave: { transform: "translate(-100%, 0)" },
   });
 
-  const explanationTransitions = useTransition(
-    pathData,
-    (p) => encodeSVGPath(p.commands),
-    {
-      from: { transform: "translate(-100%, 0)" },
-      enter: { transform: "translate(0, 0)" },
-      leave: { transform: "translate(-100%, 0)", position: "absolute" },
-    }
-  );
+  const explanationTransitions = useTransition(pathData, {
+    keys: (item) => encodeSVGPath(item.commands),
+    from: { transform: "translate(-100%, 0)" },
+    enter: { transform: "translate(0, 0)" },
+    leave: {
+      transform: "translate(-100%, 0)",
+      position: "absolute" as const,
+    },
+  });
 
   const cardsSpring = useSpring({
     transform: `translate(${hidingCards ? "-100%" : "0%"}, 0) translate(${
@@ -110,6 +111,11 @@ function App() {
 
   return (
     <div className="App">
+      <Metadata
+        metadata={
+          showBezierCurveExplanation ? curveMetadata : homeMetadata
+        }
+      />
       <div className="viewer-wrapper">
         <div className="sticky" onClick={hideCards}>
           <GitHubCorner url="https://github.com/mathieudutour/svg-path-visualizer" />
@@ -143,13 +149,12 @@ function App() {
           <Examples setPathString={setPathString} pathString={pathString} />
         </div>
         {pathData.commands.length
-          ? explanationTransitions.map(
-              ({ item, key, props }) =>
+          ? explanationTransitions(
+              (style, item) =>
                 item && (
                   <animated.div
                     className="animation-wrapper"
-                    key={key}
-                    style={props}
+                    style={style}
                   >
                     <div className="card" onClick={showCards}>
                       <h2>Explanations</h2>
@@ -166,13 +171,12 @@ function App() {
           : null}
 
         <div className="explanations">
-          {overlayTransitions.map(
-            ({ item, key, props }) =>
+          {overlayTransitions(
+            (style, item) =>
               item && (
                 <animated.div
                   className="animation-wrapper"
-                  key={key}
-                  style={props}
+                  style={style}
                 >
                   <div className="card" onClick={showCards}>
                     <Link className="cancel-button" to="/">
