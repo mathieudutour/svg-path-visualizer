@@ -33,7 +33,7 @@
     "typescript": "^7.0.2",
     "vite": "^8.1.5",
     "vite-prerender-plugin": "^0.5.13",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "packageManager": "npm@11.6.2"
 }
